@@ -27,7 +27,7 @@
             </field>
         </record>
         <record id="asset_lending_list_action" model="ir.actions.act_window" >
-            <field name="name">设备入库</field>
+            <field name="name">设备借用</field>
             <field name="res_model">asset_management.equipment_lend</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -39,7 +39,7 @@
             </field>
         </record>
         <record id="asset_getting_list_action" model="ir.actions.act_window" >
-            <field name="name">设备入库</field>
+            <field name="name">设备领用</field>
             <field name="res_model">asset_management.equipment_get</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -51,7 +51,7 @@
             </field>
         </record>
         <record id="asset_applying_list_action" model="ir.actions.act_window" >
-            <field name="name">设备入库</field>
+            <field name="name">设备IT环境申请</field>
             <field name="res_model">asset_management.equipment_it_apply</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

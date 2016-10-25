@@ -50,6 +50,16 @@
                      <header>
                      </header>
                     <group>
+                    <field name="SN" string = "设备SN" widget = 'many2many_tags' />
+                    <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' mode = 'tree'/>-->
+
+                    <field name="user_id" string = "申请人"/>
+                    <field name="approver_id" string = "审批人"/>
+                    <field name="state" string = "状态"/>
+                    <field name="lend_date" string = "借用日期"/>
+                    <field name="promise_date" string = "承诺归还日期"/>
+                    <field name="actual_date" string = "实际归还日期"/>
+                    <field name="lend_purpose" string = "借用目的"/>
                     </group>
                 </form>
             </field>
@@ -59,6 +69,10 @@
             <field name="model">asset_management.equipment_lend</field>
             <field name="arch" type="xml">
                 <tree>
+                <field name="SN" string = "设备SN" model = 'One2many'/>
+                <field name="user_id" string = "申请人"/>
+                <field name="approver_id" string = "审批人"/>
+                <field name="state" string = "状态"/>
                 </tree>
             </field>
         </record>

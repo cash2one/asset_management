@@ -34,10 +34,10 @@ class equipment_info(models.Model):
     machine_room = fields.Char(string=u"存放机房")
     cabinet_number = fields.Char(string=u"机柜编号")
     start_u_post = fields.Char(string=u"起始U位")
-    storage_id = fields.Many2one('asset_management.equipment_storage', required=True)
-    get_id = fields.Many2one('asset_management.equipment_get',required=True)
-    lend_id = fields.Many2one('asset_management.equipment_lend', required=True)
-    apply_id = fields.Many2one('asset_management.equipment_it_apply',required=True)
+    storage_id = fields.Many2one('asset_management.equipment_storage')
+    get_id = fields.Many2one('asset_management.equipment_get')
+    lend_id = fields.Many2one('asset_management.equipment_lend')
+    apply_id = fields.Many2one('asset_management.equipment_it_apply')
 
 class equipment_storage(models.Model):
     _name = 'asset_management.equipment_storage'
