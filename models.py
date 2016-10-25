@@ -41,9 +41,9 @@ class equipment_info(models.Model):
 
 class equipment_storage(models.Model):
     _name = 'asset_management.equipment_storage'
-    _rec_name = 'storge_id'
+    _rec_name = 'storage_id'
 
-    storge_id = fields.Char(string=u"入库单号")
+    storage_id = fields.Char(string=u"入库单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
     SN = fields.One2many('asset_management.equipment_info','storage_id',string=u"设备SN",required=True)

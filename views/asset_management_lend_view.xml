@@ -9,6 +9,21 @@
                      <header>
                      </header>
                     <group>
+                         <group>
+                            <field name="apply_id" string = "领用单号"/>
+                            <field name="user_id" string = "申请人"/>
+                             <field name="use_begin" string = "开始时间"/>
+                            <field name="up_date" string = "上架时间"/>
+                        </group>
+                        <group>
+                            <field name="tester" string = "测试人员"/>
+                            <field name="application_purpose" string = "申请目的"/>
+                            <field name="use_over" string = "结束时间"/>
+                            <field name="down_date" string = "下架时间"/>
+                        </group>
+                    </group>
+                     <group>
+                        <field name="SN" string = "设备" mode="tree"/>
                     </group>
                 </form>
             </field>
@@ -18,6 +33,11 @@
             <field name="model">asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="apply_id" string = "领用单号"/>
+                    <field name="user_id" string = "申请人"/>
+                    <field name="tester" string = "测试人员"/>
+                    <field name="approver_id" string = "审批人"/>
+                    <field name="state" string = "状态"/>
                 </tree>
             </field>
         </record>
