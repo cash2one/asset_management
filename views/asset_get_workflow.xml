@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<record model="workflow" id="wkf_asset_get_equipment">-->
+            <!--<field name="name">get equipment workflow</field>-->
+            <!--<field name="osv">asset_management.equipment_get</field>-->
+            <!--<field name="on_create">True</field>-->
+        <!--</record>-->
+
+        <!--<record model="workflow.activity" id="get_equipment_new">-->
+            <!--<field name="name">new</field>-->
+            <!--<field name="wkf_id" ref="wkf_asset_get_equipment" />-->
+            <!--<field name="flow_start" eval="True"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_a_new()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="get_equipment_back_new">-->
+            <!--<field name="name">back_to_new</field>-->
+            <!--<field name="wkf_id" ref="wkf_asset_get_equipment" />-->
+            <!--&lt;!&ndash;<field name="flow_start" eval="True"/>&ndash;&gt;-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_a_back_new()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="get_equipment_begin">-->
+            <!--<field name="name">begin</field>-->
+            <!--<field name="wkf_id" ref="wkf_asset_get_equipment" />-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_get_begin()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="get_equipment_deal">-->
+            <!--<field name="name">deal</field>-->
+            <!--<field name="wkf_id" ref="wkf_asset_get_equipment" />-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_get_deal()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="get_equipment_check">-->
+            <!--<field name="name">check</field>-->
+            <!--<field name="wkf_id" ref="wkf_asset_get_equipment" />-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_get_check()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="get_equipment_over">-->
+            <!--<field name="name">over</field>-->
+            <!--<field name="wkf_id" ref="wkf_asset_get_equipment" />-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_get_over()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_new_ok">-->
+            <!--<field name="act_from" ref="get_equipment_new" />-->
+            <!--<field name="act_to" ref="get_equipment_begin"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_partner" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<field name="signal">set_to_begin_t</field>&ndash;&gt;-->
+        <!--</record>-->
+        <!--&lt;!&ndash;<record model="workflow.transition" id="wkf_asset_get_equipment_new_fail">&ndash;&gt;-->
+            <!--&lt;!&ndash;<field name="act_from" ref="get_equipment_new" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<field name="act_to" ref="get_equipment_begin"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_partner" />&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<field name="signal">set_to_begin_f</field>&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;</record>这个流没法控制&ndash;&gt;-->
+
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_begin_ok">-->
+            <!--<field name="act_from" ref="get_equipment_begin" />-->
+            <!--<field name="act_to" ref="get_equipment_deal"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_partner" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_true</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_begin_fail">-->
+            <!--<field name="act_from" ref="get_equipment_begin" />-->
+            <!--<field name="act_to" ref="get_equipment_back_new"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_partner" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_fail</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_deal_ok">-->
+            <!--<field name="act_from" ref="get_equipment_deal" />-->
+            <!--<field name="act_to" ref="get_equipment_check"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_true</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_deal_fail">-->
+            <!--<field name="act_from" ref="get_equipment_deal" />-->
+            <!--<field name="act_to" ref="get_equipment_back_new"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_fail</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_check_ok">-->
+            <!--<field name="act_from" ref="get_equipment_check" />-->
+            <!--<field name="act_to" ref="get_equipment_over"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_true</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_check_fail">-->
+            <!--<field name="act_from" ref="get_equipment_check" />-->
+            <!--<field name="act_to" ref="get_equipment_back_new"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_fail</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_over_ok">-->
+            <!--<field name="act_from" ref="get_equipment_over" />-->
+            <!--<field name="act_to" ref="get_equipment_begin"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_true</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_over_fail">-->
+            <!--<field name="act_from" ref="get_equipment_over" />-->
+            <!--<field name="act_to" ref="get_equipment_back_new"/>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_fail</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="wkf_asset_get_equipment_check_again">-->
+            <!--<field name="act_from" ref="get_equipment_back_new" />-->
+            <!--<field name="act_to" ref="get_equipment_begin"/>-->
+            <!--&lt;!&ndash;<field name="condition">judge_tac1()</field>&ndash;&gt;-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_cds" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_true</field>-->
+        <!--</record>-->
+
+
+        <!--<record model="workflow.transition" id="server_desk_case_back_customer_feedback_to_tac1">-->
+            <!--<field name="act_from" ref="server_desk_customer_feedback" />-->
+            <!--<field name="act_to" ref="server_desk_back_tac1" />-->
+            <!--<field name="condition">judge_tac1()</field>-->
+            <!--<field name="group_id" ref="base.group_server_desk_tac1" />-->
+            <!--<field name="signal">set_to_past</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_customer_feedback_to_tac2">-->
+            <!--<field name="act_from" ref="server_desk_customer_feedback" />-->
+            <!--<field name="act_to" ref="server_desk_back_tac2" />-->
+            <!--<field name="condition">judge_tac2()</field>-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_tac2_ACS_CDN,base.group_server_desk_tac2_switch_router" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_past</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_customer_feedback_to_master">-->
+            <!--<field name="act_from" ref="server_desk_customer_feedback" />-->
+            <!--<field name="act_to" ref="server_desk_back_master" />-->
+            <!--<field name="condition">judge_master()</field>-->
+            <!--<field name="group_id" ref="base.group_server_desk_master" />-->
+            <!--<field name="signal">set_to_past</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_customer_feedback_to_oem">-->
+            <!--<field name="act_from" ref="server_desk_customer_feedback" />-->
+            <!--<field name="act_to" ref="server_desk_back_oem" />-->
+            <!--<field name="condition">judge_oem()</field>-->
+            <!--<field name="group_id" ref="base.group_server_desk_tac1" />-->
+            <!--<field name="signal">set_to_past</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_oem_to_customer_feedback">-->
+            <!--<field name="act_from" ref="server_desk_back_oem" />-->
+            <!--<field name="act_to" ref="server_desk_customer_feedback" />-->
+            <!--<field name="group_id" ref="base.group_server_desk_tac1" />-->
+            <!--<field name="signal">set_to_customer_feedback</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_master_to_customer_feedback">-->
+            <!--<field name="act_from" ref="server_desk_back_master" />-->
+            <!--<field name="act_to" ref="server_desk_customer_feedback" />-->
+            <!--<field name="group_id" ref="base.group_server_desk_master" />-->
+            <!--<field name="signal">set_to_customer_feedback</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_tac2_to_customer_feedback">-->
+            <!--<field name="act_from" ref="server_desk_back_tac2" />-->
+            <!--<field name="act_to" ref="server_desk_customer_feedback" />-->
+            <!--&lt;!&ndash;<field name="group_id" ref="base.group_server_desk_tac2_ACS_CDN,base.group_server_desk_tac2_switch_router" />&ndash;&gt;-->
+            <!--<field name="signal">set_to_customer_feedback</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_back_tac1_to_customer_feedback">-->
+            <!--<field name="act_from" ref="server_desk_back_tac1" />-->
+            <!--<field name="act_to" ref="server_desk_customer_feedback" />-->
+            <!--<field name="group_id" ref="base.group_server_desk_tac1" />-->
+            <!--<field name="signal">set_to_customer_feedback</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="server_desk_case_audit_to_done">-->
+            <!--<field name="act_from" ref="server_desk_audit" />-->
+            <!--<field name="act_to" ref="server_desk_done" />-->
+            <!--<field name="group_id" ref="base.group_server_desk_product_manager" />-->
+            <!--<field name="signal">set_to_done</field>-->
+        <!--</record>-->
+    </data>
+</openerp>

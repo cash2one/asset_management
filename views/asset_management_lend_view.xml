@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         <record model="ir.ui.view" id="asset_apply_form_view">
+            <field name="name">equipment_it_apply.form</field>
+            <field name="model" >asset_management.equipment_it_apply</field>
+            <field name="arch" type="xml">
+                <form string="equipment_storage Form" create="false">
+                     <header>
+                     </header>
+                    <group>
+                    </group>
+                </form>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="asset_apply_tree_view">
+            <field name="name">equipment_it_apply.tree</field>
+            <field name="model">asset_management.equipment_it_apply</field>
+            <field name="arch" type="xml">
+                <tree>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="asset_lend_form_view">
+            <field name="name">equipment_lend.form</field>
+            <field name="model" >asset_management.equipment_lend</field>
+            <field name="arch" type="xml">
+                <form string="equipment_storage Form" create="false">
+                     <header>
+                     </header>
+                    <group>
+                    </group>
+                </form>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="asset_lend_tree_view">
+            <field name="name">equipment_lend.tree</field>
+            <field name="model">asset_management.equipment_lend</field>
+            <field name="arch" type="xml">
+                <tree>
+                </tree>
+            </field>
+        </record>
+    </data>
+</openerp>

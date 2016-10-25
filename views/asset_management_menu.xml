@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <record id="asset_info_list_action" model="ir.actions.act_window" >
+            <field name="name">设备信息表</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first info
+                </p>
+            </field>
+        </record>
+        <record id="asset_storing_list_action" model="ir.actions.act_window" >
+            <field name="name">设备入库</field>
+            <field name="res_model">asset_management.equipment_storage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">创建新的流程-设备入库
+                </p>
+            </field>
+        </record>
+        <record id="asset_lending_list_action" model="ir.actions.act_window" >
+            <field name="name">设备入库</field>
+            <field name="res_model">asset_management.equipment_lend</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">创建新的流程-设备借用
+                </p>
+            </field>
+        </record>
+        <record id="asset_getting_list_action" model="ir.actions.act_window" >
+            <field name="name">设备入库</field>
+            <field name="res_model">asset_management.equipment_get</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">创建新的流程-设备领用
+                </p>
+            </field>
+        </record>
+        <record id="asset_applying_list_action" model="ir.actions.act_window" >
+            <field name="name">设备入库</field>
+            <field name="res_model">asset_management.equipment_it_apply</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">创建新的流程-IT环境申请
+                </p>
+            </field>
+        </record>
+
+        <!--<record id="action_server_desk_all_case1_tree" model="ir.actions.act_window.view">-->
+            <!--<field name="view_mode">tree</field>-->
+            <!--<field name="sequence" eval="1"/>-->
+            <!--<field name="view_id" ref="humen_cost_tree_view" />-->
+            <!--<field name="act_window_id" ref="resource_cost_list_action"/>-->
+        <!--</record>-->
+        <!--<record id="action_server_desk_all_case2_form" model="ir.actions.act_window.view">-->
+            <!--<field name="view_mode">form</field>-->
+            <!--<field name="sequence" eval="12"/>-->
+            <!--<field name="view_id" ref="humen_cost_form_view" />-->
+            <!--<field name="act_window_id" ref="resource_cost_list_action"/>-->
+        <!--</record>-->
+
+
+
+        <!-- top level menu: no parent -->
+        <menuitem id="main_asset_management_menu" name="Asset management"/>
+        <!-- A first level in the left side menu is needed before using action= attribute -->
+        <menuitem id="asset_information_menu" name="Asset information" parent="main_asset_management_menu"/>
+        <menuitem id="all_info_menu" name="info Menu" parent="asset_information_menu" action="asset_info_list_action" />
+        <menuitem id="all_lending_menu" name="lending Menu" parent="asset_information_menu" action="asset_lending_list_action" />
+        <menuitem id="all_getting_menu" name="getting Menu" parent="asset_information_menu" action="asset_getting_list_action" />
+        <menuitem id="all_storing_menu" name="storing Menu" parent="asset_information_menu" action="asset_storing_list_action" />
+        <menuitem id="all_applying_menu" name="applying Menu" parent="asset_information_menu" action="asset_applying_list_action" />
+          </data>
+</openerp>
