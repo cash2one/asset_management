@@ -34,10 +34,10 @@ class equipment_info(models.Model):
     machine_room = fields.Char(string=u"存放机房")
     cabinet_number = fields.Char(string=u"机柜编号")
     start_u_post = fields.Char(string=u"起始U位")
-    storage_id = fields.Many2one('asset_management.equipment_storage')
-    get_id = fields.Many2one('asset_management.equipment_get')
-    lend_id = fields.Many2one('asset_management.equipment_lend')
-    apply_id = fields.Many2one('asset_management.equipment_it_apply')
+    storage_id = fields.Many2many('asset_management.equipment_storage',"storge_equipment_ref",)
+    get_ids = fields.Many2many('asset_management.equipment_get',"get_equipment_ref",)
+    lend_ids = fields.Many2many('asset_management.equipment_lend',"lend_equipment_ref",)
+    apply_ids = fields.Many2many('asset_management.equipment_it_apply',"IT_equipment_ref" ,)
 
 class equipment_storage(models.Model):
     _name = 'asset_management.equipment_storage'
@@ -46,8 +46,14 @@ class equipment_storage(models.Model):
     storage_id = fields.Char(string=u"入库单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
-    SN = fields.One2many('asset_management.equipment_info','storage_id',string=u"设备SN",required=True)
-    state = fields.Char(string=u"状态",required=True)
+    # SN = fields.Char()
+    SN = fields.Many2many('asset_management.equipment_info',"storge_equipment_ref",string=u"设备SN",required=True)
+    state = fields.Selection([
+        ('demander', u"需求方申请"),
+        ('ass_admin', u"资产管理员"),
+        ('ass_admin_manager', u"资产管理部门主管"),
+        ('owner', u"资产归属人"),
+    ],string=u"状态",required=True,default='demander')
 
 class equipment_lend(models.Model):
     _name = 'asset_management.equipment_lend'
@@ -56,8 +62,15 @@ class equipment_lend(models.Model):
     lend_id = fields.Char(string=u"借用单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
-    SN = fields.One2many('asset_management.equipment_info','lend_id', string=u"设备SN", required=True)
-    state = fields.Char(string=u"状态", required=True)
+    SN = fields.Many2many('asset_management.equipment_info',"lend_equipment_ref", string=u"设备SN", required=True)
+    state = fields.Selection([
+            ('demander', u"需求方申请"),
+            ('ass_admin', u"资产管理员"),
+            ('dem_leader', u"需求方直属部门领导"),
+            ('dem_leader_manager', u"需求方直属主管"),# 副总裁级
+            ('ass_director', u"资产管理部门负责人"),
+            ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
+    ], string=u"状态", required=True,default='demander')
     lend_date = fields.Date(string=u"借用日期",required=True)
     promise_date = fields.Date(string=u"承诺归还日期",required=True)
     actual_date = fields.Date(string=u"实际归还日期",required=True)
@@ -67,13 +80,25 @@ class equipment_get(models.Model):
     _name = 'asset_management.equipment_get'
     _rec_name = 'get_id'
 
+    def _default_SN(self):
+        return self.env['asset_management.equipment_info'].browse(self._context.get('active_ids'))
     get_id = fields.Char(string=u"领用单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
-    SN = fields.One2many('asset_management.equipment_info', 'get_id',string=u"设备SN", required=True)
-    state = fields.Char(string=u"状态", required=True)
+    SN = fields.Many2many('asset_management.equipment_info',"get_equipment_ref",string=u"设备SN", default=_default_SN,required=True)
+    state = fields.Selection([
+            ('demander', u"需求方申请"),
+             ('ass_admin', u"资产管理员"),
+             ('dem_leader', u"需求方直属部门领导"),
+             ('ass_director', u"资产管理部门负责人"),
+             ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
+    ], string=u"状态", required=True,default='demander')
     get_date = fields.Date(string=u"领用日期")
     get_purpose = fields.Char(string=u"领用目的",required=True)
+
+    @api.multi
+    def subscribe(self):
+        return {'aaaaaaaaaaaaaa'}
 
 class equipment_it_apply(models.Model):
     _name = 'asset_management.equipment_it_apply'
@@ -82,8 +107,16 @@ class equipment_it_apply(models.Model):
     apply_id = fields.Char(string=u"申请IT环境单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
-    SN = fields.One2many('asset_management.equipment_info', 'apply_id',string=u"设备SN", required=True)
-    state = fields.Char(string=u"状态",required=True)
+    SN = fields.Many2many('asset_management.equipment_info',"IT_equipment_ref" ,string=u"设备SN", required=True)
+    state = fields.Selection([
+
+             ('demander', u"需求方申请"),
+             ('ass_admin', u"资产管理员"),
+             ('dem_leader', u"需求方直属部门领导"),
+             ('dem_leader_manager', u"需求方直属主管"),# 副总裁级
+             ('ass_director', u"资产管理部门负责人"),
+             ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
+    ], string=u"状态", required=True,default='demander')
     use_begin = fields.Date(string=u"使用开始时间",required=True)
     use_over = fields.Date(string=u"使用结束时间",required=True)
     up_date = fields.Date(string=u"设备上架时间",required=True)

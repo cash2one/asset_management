@@ -43,6 +43,10 @@
             <field name="arch" type="xml">
                 <form string="equipment_get Form" create="false">
                     <header>
+                        <!--<button name="action_to_confirm" type="workflow" string="提交" states="new" class="oe_highlight" groups="base.group_server_desk_partner"/>-->
+                        <!--<button name="action_to_draft" type="workflow" string="转TAC一线团队" states="cds,new" class="oe_highlight" groups="base.group_server_desk_cds"/>-->
+                        <!--<button name="action_to down" type="workflow" string="转TAC二线团队" states="customer_feedback" class="oe_highlight" groups="base.group_server_desk_tac1"/>-->
+                        <!--<field name="state" widget="statusbar"/>-->
                     </header>
                     <group>
                         <group>
@@ -58,6 +62,12 @@
                      <group>
                         <field name="SN" string = "设备" mode="tree"/>
                     </group>
+                    <footer>
+                        <button name="subscribe" type="object"
+                                string="Subscribe" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -115,6 +125,12 @@
                 </tree>
             </field>
         </record>
-
+        <act_window id="launch_session_wizard"
+                    name="领用"
+                    src_model="asset_management.equipment_info"
+                    res_model="asset_management.equipment_get"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
     </data>
 </openerp>

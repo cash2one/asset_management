@@ -87,5 +87,8 @@
         <menuitem id="all_getting_menu" name="getting Menu" parent="asset_information_menu" action="asset_getting_list_action" />
         <menuitem id="all_storing_menu" name="storing Menu" parent="asset_information_menu" action="asset_storing_list_action" />
         <menuitem id="all_applying_menu" name="applying Menu" parent="asset_information_menu" action="asset_applying_list_action" />
-          </data>
+
+
+
+    </data>
 </openerp>
