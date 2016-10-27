@@ -43,15 +43,16 @@
             <field name="arch" type="xml">
                 <form string="equipment_get Form" create="false">
                     <header>
-                        <!--<button name="action_to_confirm" type="workflow" string="提交" states="new" class="oe_highlight" groups="base.group_server_desk_partner"/>-->
-                        <!--<button name="action_to_draft" type="workflow" string="转TAC一线团队" states="cds,new" class="oe_highlight" groups="base.group_server_desk_cds"/>-->
-                        <!--<button name="action_to down" type="workflow" string="转TAC二线团队" states="customer_feedback" class="oe_highlight" groups="base.group_server_desk_tac1"/>-->
-                        <!--<field name="state" widget="statusbar"/>-->
+                        <button name="action_to_confirm" type="workflow" string="提交" states='demander' class="oe_highlight" />
+                        <button name="action_to_draft" type="workflow" string="不同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to_next" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <group>
                         <group>
                             <field name="get_id" string = "领用单号"/>
                             <field name="user_id" string = "申请人"/>
+                            <field name="approver_id" string = "审批人"/>
                         </group>
                         <group>
                             <field name="get_date" string = "领用日期"/>
@@ -91,6 +92,10 @@
             <field name="arch" type="xml">
                 <form string="equipment_storage Form" create="false">
                      <header>
+                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
+                        <button name="action_to_draft" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to down" type="workflow" string="拒绝" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <field name="state" widget="statusbar"/>
                      </header>
                     <group>
                          <group>

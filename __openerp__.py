@@ -18,7 +18,9 @@
                 'views/asset_lend_workflow.xml',
                 'views/asset_apply_workflow.xml',
                 'templates.xml',
-                'data.xml'
+                'data.xml',
+                ''
+
                 ],
 # data files which are only installed in "demonstration mode"
         'demo': ['demo.xml' ,

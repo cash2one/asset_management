@@ -84,14 +84,15 @@ class equipment_get(models.Model):
         return self.env['asset_management.equipment_info'].browse(self._context.get('active_ids'))
     get_id = fields.Char(string=u"领用单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
-    approver_id = fields.Many2one('res.users', string=u"审批人")
+    approver_id = fields.Many2one('res.users', string=u"审批人",domain=[('groups_id','ilike','humen_resource_cost.group_ass_admin')])
     SN = fields.Many2many('asset_management.equipment_info',"get_equipment_ref",string=u"设备SN", default=_default_SN,required=True)
     state = fields.Selection([
-            ('demander', u"需求方申请"),
+             ('demander', u"需求方申请"),
              ('ass_admin', u"资产管理员"),
              ('dem_leader', u"需求方直属部门领导"),
              ('ass_director', u"资产管理部门负责人"),
              ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
+        ('done',u'结束')
     ], string=u"状态", required=True,default='demander')
     get_date = fields.Date(string=u"领用日期")
     get_purpose = fields.Char(string=u"领用目的",required=True)
@@ -99,6 +100,30 @@ class equipment_get(models.Model):
     @api.multi
     def subscribe(self):
         return {'aaaaaaaaaaaaaa'}
+
+    @api.multi
+    def action_demander(self):
+        self.state = 'demander'
+
+    @api.multi
+    def action_ass_admin(self):
+        self.state = 'ass_admin'
+
+    @api.multi
+    def action_dem_leader(self):
+        self.state = 'dem_leader'
+
+    @api.multi
+    def action_ass_director(self):
+        self.state = 'ass_director'
+
+    @api.multi
+    def action_ass_admin_manager(self):
+        self.state = 'ass_admin_manager'
+
+    @api.multi
+    def action_to_done(self):
+        self.state = 'done'
 
 class equipment_it_apply(models.Model):
     _name = 'asset_management.equipment_it_apply'
