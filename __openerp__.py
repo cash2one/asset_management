@@ -25,5 +25,5 @@
 # data files which are only installed in "demonstration mode"
         'demo': ['demo.xml' ,
         ],
-
+        'application': True,
 }

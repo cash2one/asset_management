@@ -38,17 +38,51 @@
                 </p>
             </field>
         </record>
-        <record id="asset_getting_list_action" model="ir.actions.act_window" >
+        <record id="asset_getting_action" model="ir.actions.act_window" >
             <field name="name">设备领用</field>
             <field name="res_model">asset_management.equipment_get</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
-           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <!--<field name="view_id" ref="asset_get_form_view"/>-->
+            <field name ="domain">[('approver_id','=',uid)]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">创建新的流程-设备领用
                 </p>
             </field>
+        </record>
+        <record id="asset_getting_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="asset_get_tree_view" />
+            <field name="act_window_id" ref="asset_getting_action" />
+        </record>
+        <record id="asset_getting_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="asset_get_form_view" />
+            <field name="act_window_id" ref="asset_getting_action" />
+        </record>
+        <record id="processed_asset_getting_action" model="ir.actions.act_window" >
+            <field name="name">已处理过的领用申请</field>
+            <field name="res_model">asset_management.equipment_get</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+            <field name="view_id" ref="asset_get_processed_form_view"/>
+            <field name ="domain">['|',('get_exam_ids.approver_id','ilike',uid),('user_id','=',uid),('state','!=','demander')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">创建新的流程-设备领用
+                </p>
+            </field>
+        </record>
+        <record id="processed_asset_getting_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="asset_get_tree_view" />
+            <field name="act_window_id" ref="processed_asset_getting_action" />
+        </record>
+        <record id="processed_asset_getting_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="asset_get_processed_form_view" />
+            <field name="act_window_id" ref="processed_asset_getting_action" />
         </record>
         <record id="asset_applying_list_action" model="ir.actions.act_window" >
             <field name="name">设备IT环境申请</field>
@@ -84,7 +118,8 @@
         <menuitem id="asset_information_menu" name="Asset information" parent="main_asset_management_menu"/>
         <menuitem id="all_info_menu" name="info Menu" parent="asset_information_menu" action="asset_info_list_action" />
         <menuitem id="all_lending_menu" name="lending Menu" parent="asset_information_menu" action="asset_lending_list_action" />
-        <menuitem id="all_getting_menu" name="getting Menu" parent="asset_information_menu" action="asset_getting_list_action" />
+        <menuitem id="all_getting_menu" name="getting Menu" parent="asset_information_menu" action="asset_getting_action" />
+        <menuitem id="processed_getting_menu" name="processed_getting Menu" parent="asset_information_menu" action="processed_asset_getting_action" />
         <menuitem id="all_storing_menu" name="storing Menu" parent="asset_information_menu" action="asset_storing_list_action" />
         <menuitem id="all_applying_menu" name="applying Menu" parent="asset_information_menu" action="asset_applying_list_action" />
 

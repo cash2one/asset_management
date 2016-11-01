@@ -64,15 +64,15 @@
         <!--<field name="perm_create" eval="1"/>-->
         <!--<field name="perm_unlink" eval="1"/>-->
     <!--</record>-->
-    <!--<record id="hr_re_manager_vice_rule" model="ir.rule">-->
-        <!--<field name="name">副总裁权限</field>-->
-        <!--<field name="model_id" ref="hr.model_hr_wages"/>-->
-        <!--<field name="groups" eval="[(4,ref('humen_resource_cost.group_manager_vice'))]"/>-->
-        <!--<field name="perm_write" eval="0"/>-->
-        <!--<field name="perm_read" eval="1"/>-->
-        <!--<field name="perm_create" eval="0"/>-->
-        <!--<field name="perm_unlink" eval="0"/>-->
-    <!--</record>-->
+    <record id="device_get_rule" model="ir.rule">
+        <field name="name">领用申请</field>
+        <field name="model_id" ref="model_asset_management_equipment_get"/>
+        <field name="domain_force">[('approver_id','=',user.id)]</field>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
 
 
 
