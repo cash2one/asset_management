@@ -12,8 +12,20 @@
         <!--<field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>-->
     <!--</record>-->
 
-    <record model="res.groups" id="humen_resource_cost.group_ass_admin">
+    <record model="res.groups" id="asset_management.group_ass_admin">
         <field name="name">资产管理员</field>
+        <field name="category_id" ref="base.module_category_assetmanagement"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+    <record model="res.groups" id="asset_management.group_ass_director">
+        <field name="name">资产管理部门负责人</field>
+        <field name="category_id" ref="base.module_category_assetmanagement"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+    <record model="res.groups" id="asset_management.group_ass_admin_manager">
+        <field name="name">资产管理部门主管</field>
         <field name="category_id" ref="base.module_category_assetmanagement"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>

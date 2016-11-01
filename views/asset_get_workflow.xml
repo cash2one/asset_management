@@ -1,96 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record model="workflow" id="wkf_session">
-            <field name="name">get equipment workflow</field>
-            <field name="osv">asset_management.equipment_get</field>
-            <field name="on_create">True</field>
-        </record>
+        <!--<record model="workflow" id="wkf_session">-->
+            <!--<field name="name">get equipment workflow</field>-->
+            <!--<field name="osv">asset_management.equipment_get</field>-->
+            <!--<field name="on_create">True</field>-->
+        <!--</record>-->
 
-        <record model="workflow.activity" id="demander">
-            <field name="name">demander</field>
-            <field name="wkf_id" ref="wkf_session"/>
-            <field name="flow_start" eval="True"/>
-            <field name="kind">function</field>
-            <field name="action">action_demander()</field>
-        </record>
-        <record model="workflow.activity" id="ass_admin">
-            <field name="name">ass_admin</field>
-            <field name="wkf_id" ref="wkf_session"/>
-            <field name="kind">function</field>
-            <field name="action">action_ass_admin()</field>
-        </record>
-        <record model="workflow.activity" id="dem_leader">
-            <field name="name">dem_leader</field>
-            <field name="wkf_id" ref="wkf_session"/>
-            <field name="kind">function</field>
-            <field name="action">action_dem_leader()</field>
-        </record>
-        <record model="workflow.activity" id="ass_director">
-            <field name="name">ass_directorr</field>
-            <field name="wkf_id" ref="wkf_session"/>
-            <field name="kind">function</field>
-            <field name="action">action_ass_director()</field>
-        </record>
-          <record model="workflow.activity" id="ass_admin_manager">
-            <field name="name">ass_admin_manager</field>
-            <field name="wkf_id" ref="wkf_session"/>
-            <field name="kind">function</field>
-            <field name="action">action_ass_admin_manager()</field>
-        </record>
-        <record model="workflow.activity" id="done">
-            <field name="name">done</field>
-            <field name="wkf_id" ref="wkf_session"/>
-            <field name="kind">function</field>
-            <field name="action">action_to_done()</field>
-        </record>
-        <record model="workflow.transition" id="get_demander_to_ass_admin">
-            <field name="act_from" ref="demander"/>
-            <field name="act_to" ref="ass_admin"/>
-            <field name="signal">action_to_confirm</field>
-        </record>
+        <!--<record model="workflow.activity" id="demander">-->
+            <!--<field name="name">demander</field>-->
+            <!--<field name="wkf_id" ref="wkf_session"/>-->
+            <!--<field name="flow_start" eval="True"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_demander()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="ass_admin">-->
+            <!--<field name="name">ass_admin</field>-->
+            <!--<field name="wkf_id" ref="wkf_session"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_ass_admin()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="dem_leader">-->
+            <!--<field name="name">dem_leader</field>-->
+            <!--<field name="wkf_id" ref="wkf_session"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_dem_leader()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="ass_director">-->
+            <!--<field name="name">ass_directorr</field>-->
+            <!--<field name="wkf_id" ref="wkf_session"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_ass_director()</field>-->
+        <!--</record>-->
+          <!--<record model="workflow.activity" id="ass_admin_manager">-->
+            <!--<field name="name">ass_admin_manager</field>-->
+            <!--<field name="wkf_id" ref="wkf_session"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_ass_admin_manager()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.activity" id="done">-->
+            <!--<field name="name">done</field>-->
+            <!--<field name="wkf_id" ref="wkf_session"/>-->
+            <!--<field name="kind">function</field>-->
+            <!--<field name="action">action_to_done()</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_demander_to_ass_admin">-->
+            <!--<field name="act_from" ref="demander"/>-->
+            <!--<field name="act_to" ref="ass_admin"/>-->
+            <!--<field name="signal">action_to_confirm</field>-->
+        <!--</record>-->
 
-        <record model="workflow.transition" id="get_ass_admin_to_dem_leader">
-            <field name="act_from" ref="ass_admin"/>
-            <field name="act_to" ref="dem_leader"/>
-            <field name="signal">action_to_next</field>
-        </record>
-        <record model="workflow.transition" id="get_dem_leader_to_ass_director">
-            <field name="act_from" ref="dem_leader"/>
-            <field name="act_to" ref="ass_director"/>
-            <field name="signal">action_to_next</field>
-        </record>
-        <record model="workflow.transition" id="get_ass_director_to_ass_admin_manager">
-            <field name="act_from" ref="ass_director"/>
-            <field name="act_to" ref="ass_admin_manager"/>
-            <field name="signal">action_to_next</field>
-        </record>
-        <record model="workflow.transition" id="get_admin_manager_to_done">
-            <field name="act_from" ref="ass_admin_manager"/>
-            <field name="act_to" ref="done"/>
-            <field name="signal">action_to_next</field>
-        </record>
+        <!--<record model="workflow.transition" id="get_ass_admin_to_dem_leader">-->
+            <!--<field name="act_from" ref="ass_admin"/>-->
+            <!--<field name="act_to" ref="dem_leader"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+            <!--<field name="condition">user_id.employee_ids not in user_id.employee_ids.department_id.manager_id</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_ass_admin_to_dem_leader">-->
+            <!--<field name="act_from" ref="ass_admin"/>-->
+            <!--<field name="act_to" ref="ass_director"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+            <!--<field name="condition">user_id.employee_ids in user_id.employee_ids.department_id.manager_id</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_ass_admin_to_dem_leader">-->
+            <!--<field name="act_from" ref="ass_admin"/>-->
+            <!--<field name="act_to" ref="ass_admin_manager"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+            <!--&lt;!&ndash;<field name="condition">taken_seats &gt; 50</field>&ndash;&gt;-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_ass_admin_to_dem_leader">-->
+            <!--<field name="act_from" ref="ass_admin"/>-->
+            <!--<field name="act_to" ref="done"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+            <!--&lt;!&ndash;<field name="condition">taken_seats &gt; 50</field>&ndash;&gt;-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_dem_leader_to_ass_director">-->
+            <!--<field name="act_from" ref="dem_leader"/>-->
+            <!--<field name="act_to" ref="ass_director"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_ass_director_to_ass_admin_manager">-->
+            <!--<field name="act_from" ref="ass_director"/>-->
+            <!--<field name="act_to" ref="ass_admin_manager"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+        <!--</record>-->
+        <!--<record model="workflow.transition" id="get_admin_manager_to_done">-->
+            <!--<field name="act_from" ref="ass_admin_manager"/>-->
+            <!--<field name="act_to" ref="done"/>-->
+            <!--<field name="signal">action_to_next</field>-->
+        <!--</record>-->
 
-         <record model="workflow.transition" id="get_ass_admin_to_demander">
-            <field name="act_from" ref="ass_admin"/>
-            <field name="act_to" ref="demander"/>
-            <field name="signal">action_to_draft</field>
-        </record>
-         <record model="workflow.transition" id="get_dem_leader_to_demander">
-            <field name="act_from" ref="dem_leader"/>
-            <field name="act_to" ref="demander"/>
-            <field name="signal">action_to_draft</field>
-        </record>
-         <record model="workflow.transition" id="get_ass_director_to_demander">
-            <field name="act_from" ref="ass_director"/>
-            <field name="act_to" ref="demander"/>
-            <field name="signal">action_to_draft</field>
-        </record>
-         <record model="workflow.transition" id="get_admin_manager_to_demander">
-            <field name="act_from" ref="ass_admin_manager"/>
-            <field name="act_to" ref="demander"/>
-            <field name="signal">action_to_draft</field>
-        </record>
+         <!--<record model="workflow.transition" id="get_ass_admin_to_demander">-->
+            <!--<field name="act_from" ref="ass_admin"/>-->
+            <!--<field name="act_to" ref="demander"/>-->
+            <!--<field name="signal">action_to_draft</field>-->
+        <!--</record>-->
+         <!--<record model="workflow.transition" id="get_dem_leader_to_demander">-->
+            <!--<field name="act_from" ref="dem_leader"/>-->
+            <!--<field name="act_to" ref="demander"/>-->
+            <!--<field name="signal">action_to_draft</field>-->
+        <!--</record>-->
+         <!--<record model="workflow.transition" id="get_ass_director_to_demander">-->
+            <!--<field name="act_from" ref="ass_director"/>-->
+            <!--<field name="act_to" ref="demander"/>-->
+            <!--<field name="signal">action_to_draft</field>-->
+        <!--</record>-->
+         <!--<record model="workflow.transition" id="get_admin_manager_to_demander">-->
+            <!--<field name="act_from" ref="ass_admin_manager"/>-->
+            <!--<field name="act_to" ref="demander"/>-->
+            <!--<field name="signal">action_to_draft</field>-->
+        <!--</record>-->
 
     </data>
 </openerp>

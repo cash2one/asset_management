@@ -43,9 +43,9 @@
             <field name="arch" type="xml">
                 <form string="equipment_get Form" create="false">
                     <header>
-                        <button name="action_to_confirm" type="workflow" string="提交" states='demander' class="oe_highlight" />
-                        <button name="action_to_draft" type="workflow" string="不同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
-                        <button name="action_to_next" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to_confirm" type="object" string="提交" states='demander' class="oe_highlight" />
+                        <button name="action_to_demander" type="object" string="退回" states="ass_admin,ass_owner,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to_next" type="object" string="同意" states="ass_admin,ass_owner,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <group>
@@ -62,7 +62,10 @@
                     </group>
                      <group>
                         <field name="SN" string = "设备" mode="tree"/>
+                                                 <field name="owners" />
+
                     </group>
+
                     <footer>
                         <button name="subscribe" type="object"
                                 string="Subscribe" class="oe_highlight"/>
