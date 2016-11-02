@@ -1,0 +1,5 @@
+*.py[cod]
+
+# pyCharm config files
+.idea/
+workspace.xml
