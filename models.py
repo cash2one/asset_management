@@ -27,7 +27,7 @@ class equipment_info(models.Model):
                                 ],string=u"设备用途",required=True)
     state = fields.Selection([
         (u'待入库',u'待入库'),
-        (u'入库中',u'入库中',)
+        (u'入库中',u'入库中'),
         (u'已入库',u'已入库'),
         (u'领用',u'领用'),
         (u'借用',u'借用'),
@@ -145,20 +145,7 @@ class equipment_storage(models.Model):
             {'approver_id': self.approver_id.id, 'result': u'拒绝', 'store_id': self.id})
         self.approver_id = self.user_id
 
-class lend_examine(models.Model):
-    _name = 'asset_management.lend_examine'
-    _rec_name = 'exam_num'
 
-    exam_num = fields.Char(sting='审批id')
-    approver_id = fields.Many2one('res.users', required='True', string='审批人')
-    date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
-    result = fields.Selection([
-        (u'通过', u"通过"),
-        (u'拒绝', u"拒绝"),
-
-    ], string=u"通过")
-    lend_id = fields.Many2one('asset_management.equipment_lend', string='借用单')
-    reason = fields.Char(string='原因')
 
 class equipment_lend(models.Model):
     _name = 'asset_management.equipment_lend'
@@ -594,7 +581,7 @@ class lend_examine(models.Model):
 
     exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users', required='True', string='审批人')
-    date = fields.Date(string='审批时间')
+    date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
     result = fields.Selection([
         (u'通过', u"通过"),
         (u'拒绝', u"拒绝"),
@@ -602,6 +589,7 @@ class lend_examine(models.Model):
     ], string=u"通过")
     lend_id = fields.Many2one('asset_management.equipment_lend', string='借用单')
     reason = fields.Char(string='原因')
+
 class get_examine(models.Model):
     _name = 'asset_management.get_examine'
     _rec_name = 'exam_num'
