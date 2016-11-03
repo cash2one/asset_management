@@ -26,6 +26,16 @@
                 </p>
             </field>
         </record>
+
+        <record id="asset_new_storing_action" model="ir.actions.act_window" >
+            <field name="name">新建入库</field>
+            <field name="res_model">asset_management.equipment_storage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+        </record>
+
         <record id="asset_lending_list_action" model="ir.actions.act_window" >
             <field name="name">设备借用</field>
             <field name="res_model">asset_management.equipment_lend</field>

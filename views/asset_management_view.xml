@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="equipment_storage Form" create="false">
                      <header>
+
                     </header>
 
                     <group>
