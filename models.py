@@ -55,6 +55,7 @@ class equipment_storage(models.Model):
         ('owner', u"资产归属人"),
     ],string=u"状态",required=True,default='demander')
 
+
 class equipment_lend(models.Model):
     _name = 'asset_management.equipment_lend'
     _rec_name = 'lend_id'
@@ -108,8 +109,8 @@ class equipment_get(models.Model):
     def action_to_confirm(self):
         owners = []
         for sn in self.SN:
-            owners.append(sn.owner)
-            self.owners |= sn.owner
+            if sn.owners:
+                self.owners |= sn.owner
 
         if len(self.owners) ==1:
             if  (self.owners[0] == self.user_id or self.owners[0] == self.env['res.groups'].search([('name','=',u'资产管理员')],limit=1)).users[0] and self.user_id != self.env['res.groups'].search(['name','=',u'资产管理员'],limit=1):
@@ -135,13 +136,22 @@ class equipment_get(models.Model):
 
             if self.user_id.employee_ids[0].department_id.manager_id.user_id in self.owners:
                 self.owners -= self.user_id.employee_ids[0].department_id.manager_id.user_id
-            approver_id = self.owners[0]
-
-            self.state = 'ass_owner'
-            self.owners -= approver_id
-            self.approver_id = approver_id
+            if len(self.owners):
+                approver_id = self.owners[0]
+                self.state = 'ass_owner'
+                self.owners -= approver_id
+                self.approver_id = approver_id
+            else:
+                self.state = 'ass_admin'
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
         else:
-            print '<1' * 80
+            if self.user_id != self.env['res.groups'].search([('name','=',u'资产管理员')],limit=1).users[0]:
+                self.state = 'ass_admin'
+                self.approver_id = self.env['res.groups'].search([('name','=',u'资产管理员')],limit=1).users[0]
+            else:
+                self.state = 'dem_leader'
+                self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+
 
     @api.multi
     def action_to_next(self):
@@ -154,16 +164,18 @@ class equipment_get(models.Model):
                 self.state = 'ass_owner'
                 self.owners -= approver_id
                 self.approver_id = approver_id
+            elif self.user_id == self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]:
+                self.state = 'dem_leader'
+                self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
             else:
                 self.state = 'ass_admin'
                 self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
-        elif self.state == 'ass_admin':
 
+        elif self.state == 'ass_admin':
             if self.user_id != self.user_id.employee_ids[0].department_id.manager_id.user_id:
                 self.state = 'dem_leader'
                 self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
             else:
-
                 self.state = 'ass_director'
                 self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门负责人')], limit=1).users[0]
         elif self.state == 'dem_leader':
