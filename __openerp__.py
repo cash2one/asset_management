@@ -19,11 +19,15 @@
                # 'views/asset_apply_workflow.xml',
                 'templates.xml',
                 'data.xml',
-                'security/resource_security.xml'
+                'security/resource_security.xml',
+                'views/asset_management_link.xml',
 
                 ],
 # data files which are only installed in "demonstration mode"
         'demo': ['demo.xml' ,
         ],
         'application': True,
+        'qweb':[
+                'static/src/xml/asset_management.xml',
+            ],
 }
