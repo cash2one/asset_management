@@ -28,6 +28,7 @@
                                 <field name="machine_room" string = "存放机房"/>
                                 <field name="cabinet_number" string = "机柜编号"/>
                                 <field name="start_u_post" string = "起始U位"/>
+                                <field name="state" string="状态"></field>
                                 <!--<field name="storage_id" string = "入库单号"/>-->
                                 <!--<field name="get_id" string = "领用单号"/>-->
                                 <!--<field name="lend_id" string = "借用单号"/>-->
@@ -46,6 +47,7 @@
                     <field name="equipment_status" string = "设备状态"/>
                     <field name="owner" string = "归属人"/>
                     <field name="equipment_use" string = "设备用途"/>
+                    <field name="state" string="状态"></field>
                 </tree>
             </field>
         </record>

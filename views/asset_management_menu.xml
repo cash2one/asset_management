@@ -14,26 +14,47 @@
                 </p>
             </field>
         </record>
-        <record id="asset_storing_list_action" model="ir.actions.act_window" >
-            <field name="name">设备入库</field>
+        <record id="processed_asset_storing_action" model="ir.actions.act_window" >
+            <field name="name">设备入库单</field>
             <field name="res_model">asset_management.equipment_storage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
-           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+            <field name ="domain">['|',('stroe_exam_ids.approver_id','ilike',uid),('user_id','=',uid),('state','!=','demander')]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">创建新的流程-设备入库
                 </p>
             </field>
         </record>
+         <record id="processed_asset_storing_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="asset_storage_tree_view" />
+            <field name="act_window_id" ref="processed_asset_storing_action" />
+        </record>
+        <record id="processed_asset_storing_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="processed_asset_storage_form_view" />
+            <field name="act_window_id" ref="processed_asset_storing_action" />
+        </record>
 
-        <record id="asset_new_storing_action" model="ir.actions.act_window" >
-            <field name="name">新建入库</field>
+         <record id="pending_asset_storing_action" model="ir.actions.act_window" >
+            <field name="name">待处理的入库</field>
             <field name="res_model">asset_management.equipment_storage</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
             <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
            <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+             <field name ="domain">[('approver_id','=',uid)]</field>
+
+        </record>
+        <record id="pending_asset_storing_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="asset_storage_tree_view" />
+            <field name="act_window_id" ref="pending_asset_storing_action" />
+        </record>
+        <record id="pending_asset_storing_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pending_asset_storage_form_view" />
+            <field name="act_window_id" ref="pending_asset_storing_action" />
         </record>
 
         <record id="asset_pending_lending_action" model="ir.actions.act_window" >
@@ -191,6 +212,7 @@
         <menuitem id="asset_information_menu" name="Asset information" parent="main_asset_management_menu"/>
         <menuitem id="all_info_menu" name="info Menu" parent="asset_information_menu" action="asset_info_list_action" />
 
+
         <menuitem id="the_lending_menu" name="lending Menu" parent="asset_information_menu" />
         <menuitem id="all_pending_lending_menu" name="pending lend Menu" parent="the_lending_menu" action="asset_pending_lending_action" />
         <menuitem id="all_processed_lending_menu" name="processed lend Menu" parent="the_lending_menu" action="asset_processed_lending_action" />
@@ -199,7 +221,10 @@
         <menuitem id="pending_getting_menu" name="pending get Menu" parent="all_getting_menu" action="asset_getting_action" />
         <menuitem id="processed_getting_menu" name="processed get Menu" parent="all_getting_menu" action="processed_asset_getting_action" />
 
-        <menuitem id="all_storing_menu" name="storing Menu" parent="asset_information_menu" action="asset_storing_list_action" />
+        <menuitem id="all_storing_menu" name="store Menu" parent="asset_information_menu" />
+        <menuitem id="pending_storing_menu" name="storing Menu" parent="all_storing_menu" action="pending_asset_storing_action" />
+        <menuitem id="processed_storing_menu" name="processed storing Menu" parent="all_storing_menu" action="processed_asset_storing_action" />
+
 
         <menuitem id="all_applying_menu" name="applying Menu" parent="asset_information_menu" />
         <menuitem id="all_pending_applying_menu" name="pending apply Menu" parent="all_applying_menu" action="asset_pending_apply_action" />
