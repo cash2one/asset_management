@@ -32,10 +32,10 @@ openerp.asset_management=function(instance){
             var self=this;
             if(display_name=="设备信息表"){
                 var timer=setInterval(function(){
-                    var btnParent=$('.oe_list_buttons');
-                    if(btnParent.length>0&&($('.oe_list_buttons button.need-search').length==0)){
+                    var btnParent=$('tr.oe_header_row:last>td:last');
+                    if(btnParent.length>0&&($('tr.oe_header_row button.assetM').length==0)){
                         clearInterval(timer);
-                        var btn=$("<button class='oe_highlight need-search'>入库</button>");
+                        var btn=$("<button class='assetM oe_right'>入库</button>");
                         btnParent.append(btn);
                         btn.click(function(){
                             self.jump();
