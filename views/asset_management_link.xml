@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <openerp>
     <data>
         <template id="assets_backend"  name="asset_management assets" inherit_id="web.assets_backend">

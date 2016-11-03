@@ -139,7 +139,6 @@
                                     <field name="approver_id" string = "审批人" />
                                     <field name="result" string="审批结果" />
                                     <field name = "date" string = "审批时间" />
-
                                 </tree>
                          </field>
                     </group>
@@ -159,6 +158,41 @@
                         <field name="get_purpose" string = "领用目的"/>
                         <field name="state" string = "状态"/>
                 </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="asset_apply_create_form_view">
+            <field name="name">equipment_it_apply.form</field>
+            <field name="model" >asset_management.equipment_it_apply</field>
+            <field name="arch" type="xml">
+                <form string="equipment_storage Form" create="false">
+                     <header>
+                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
+                        <field name="state" widget="statusbar"/>
+                     </header>
+                    <group>
+                         <group>
+                            <field name="apply_id" string = "领用单号"/>
+                            <field name="user_id" string = "申请人"/>
+                             <field name="use_begin" string = "开始时间"/>
+                            <field name="up_date" string = "上架时间"/>
+                        </group>
+                        <group>
+                            <field name="tester" string = "测试人员"/>
+                            <field name="application_purpose" string = "申请目的"/>
+                            <field name="use_over" string = "结束时间"/>
+                            <field name="down_date" string = "下架时间"/>
+                        </group>
+                    </group>
+                     <group>
+                        <field name="SN" string = "设备" mode="tree"/>
+                    </group>
+                    <footer>
+                        <button name="subscribe" type="object"
+                                string="Subscribe" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
         <record model="ir.ui.view" id="asset_apply_form_view">
@@ -192,6 +226,44 @@
                 </form>
             </field>
         </record>
+        <record model="ir.ui.view" id="asset_apply_processed_form_view">
+            <field name="name">equipment_it_apply.form</field>
+            <field name="model" >asset_management.equipment_it_apply</field>
+            <field name="arch" type="xml">
+                <form string="equipment_storage Form" create="false">
+                     <header>
+                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
+                        <button name="action_to_draft" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to down" type="workflow" string="拒绝" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <field name="state" widget="statusbar"/>
+                     </header>
+                    <group>
+                         <group>
+                            <field name="apply_id" string = "领用单号"/>
+                            <field name="user_id" string = "申请人"/>
+                             <field name="use_begin" string = "开始时间"/>
+                            <field name="up_date" string = "上架时间"/>
+                        </group>
+                        <group>
+                            <field name="tester" string = "测试人员"/>
+                            <field name="application_purpose" string = "申请目的"/>
+                            <field name="use_over" string = "结束时间"/>
+                            <field name="down_date" string = "下架时间"/>
+                        </group>
+                    </group>
+                     <group>
+                        <field name="SN" string = "设备" mode="tree"/>
+                         <field name="apply_exam_ids" string="审批记录">
+                             <tree string="审批记录" edit="false" create="false">
+                                    <field name="approver_id" string = "审批人" />
+                                    <field name="result" string="审批结果" />
+                                    <field name = "date" string = "审批时间" />
+                                </tree>
+                         </field>
+                    </group>
+                </form>
+            </field>
+        </record>
          <record model="ir.ui.view" id="asset_apply_tree_view">
             <field name="name">equipment_it_apply.tree</field>
             <field name="model">asset_management.equipment_it_apply</field>
@@ -205,12 +277,20 @@
                 </tree>
             </field>
         </record>
-        <act_window id="launch_session_wizard"
+        <act_window id="launch_session_get_wizard"
                     name="领用"
                     src_model="asset_management.equipment_info"
                     res_model="asset_management.equipment_get"
                     view_mode="form"
                     view_id="asset_get_create_form_view"
+                    target="new"
+                    key2="client_action_multi"/>
+        <act_window id="launch_session_it_apply_wizard"
+                    name="IT 环境申请"
+                    src_model="asset_management.equipment_info"
+                    res_model="asset_management.equipment_it_apply"
+                    view_mode="form"
+                    view_id="asset_apply_create_form_view"
                     target="new"
                     key2="client_action_multi"/>
     </data>
