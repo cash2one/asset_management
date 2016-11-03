@@ -73,6 +73,15 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    <record id="device_get_rule" model="ir.rule">
+        <field name="name">入库申请</field>
+        <field name="model_id" ref="model_asset_management_equipment_storage"/>
+        <field name="domain_force">[('approver_id','=',user.id)]</field>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
 
 
 

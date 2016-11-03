@@ -27,6 +27,7 @@ class equipment_info(models.Model):
                                 ],string=u"设备用途",required=True)
     state = fields.Selection([
         (u'待入库',u'待入库'),
+        (u'入库中',u'入库中',)
         (u'已入库',u'已入库'),
         (u'领用',u'领用'),
         (u'借用',u'借用'),
@@ -52,20 +53,97 @@ class equipment_storage(models.Model):
 
     @api.multi
     def _default_SN(self):
-        print self.env['asset_management.equipment_info'].search([('state', '=', u'待入库')])
         return self.env['asset_management.equipment_info'].search([('state', '=', u'待入库')])
 
     storage_id = fields.Char(string=u"入库单号")
-    user_id = fields.Many2one('res.users', string=u"申请人", required=True)
-    approver_id = fields.Many2one('res.users', string=u"审批人")
+    user_id = fields.Many2one('res.users', string=u"申请人",default=lambda self: self.env.user, required=True)
+    approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user,)
     # SN = fields.Char()
     SN = fields.Many2many('asset_management.equipment_info',"storge_equipment_ref",string=u"设备SN",required=True,default=_default_SN,)
     state = fields.Selection([
         ('demander', u"需求方申请"),
         ('ass_admin', u"资产管理员"),
-        ('ass_admin_manager', u"资产管理部门主管"),
+        ('ass_admin_manager', u"MA主管"),
         ('owner', u"资产归属人"),
+        ('done',u'完成')
     ],string=u"状态",required=True,default='demander')
+    owners = fields.Many2many('res.users', string=u'设备归属人', ondelete='set null')
+    stroe_exam_ids = fields.One2many('asset_management.entry_store_examine', 'store_id', string='审批记录')
+
+    @api.multi
+    def action_to_confirm(self):
+        for sn in self.SN:
+            if sn.owner:
+                self.owners |= sn.owner
+
+        if len(self.owners) == 1:
+            if (self.owners[0] == self.user_id or self.owners[0] == self.env['res.groups'].search(
+                    [('name', '=', u'资产管理员')], limit=1).users[0]) and self.user_id != self.env['res.groups'].search(
+                    ['name', '=', u'资产管理员'], limit=1):
+                self.state = 'owner'
+                approver_id =self.owners[0]
+                self.owners[0] -= approver_id
+                self.approver_id = self.owners[0]
+
+            elif self.owners[0] == self.user_id == \
+                    self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0] and self.user_id != self.env['res.groups'].search([('name', '=', u'资产管理部门主管')], limit=1).users[0]:
+                self.state = 'ass_admin_manager'
+                self.owners -= self.user_id
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门主管')], limit=1).users[0]
+
+
+            elif self.user_id !=self.env['res.groups'].search(
+                    [('name', '=', u'资产管理员')], limit=1).users[0]:
+                self.state = 'ass_admin'
+                self.approver_id = self.env['res.groups'].search(
+                    [('name', '=', u'资产管理员')], limit=1).users[0]
+            else:
+                self.state = 'done'
+                self.approver_id =None
+
+        elif len(self.owners) > 1:
+
+            if self.user_id in self.owners:
+                self.owners -= self.user_id
+            if self.env['res.groups'].search([('name', '=', '资产管理员')], limit=1).users[0] in self.owners:
+                self.owners -= self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+            self.state = 'ass_admin'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+        else:
+            self.state = 'ass_admin'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+    @api.multi
+    def action_to_next(self):
+        self.env['asset_management.entry_store_examine'].create(
+            {'approver_id': self.approver_id.id, 'result': u'通过', 'store_id': self.id})
+        if self.state == 'owner':
+            if len(self.owners):
+
+                approver_id = self.owners[0]
+                self.state = 'owner'
+                self.owners -= approver_id
+                self.approver_id = approver_id
+            else:
+                self.state = 'ass_admin_manager'
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门主管')], limit=1).users[0]
+
+        elif self.state == 'ass_admin':
+            approver_id = self.owners[0]
+            self.state = 'owner'
+            self.owners -= approver_id
+            self.approver_id = approver_id
+
+        elif self.state == 'ass_admin_manager':
+            self.state = 'done'
+            self.approver_id = None
+
+    @api.multi
+    def action_to_demander(self):
+        self.state = 'demander'
+        self.env['asset_management.get_examine'].create(
+            {'approver_id': self.approver_id.id, 'result': u'拒绝', 'store_id': self.id})
+        self.approver_id = self.user_id
 
 
 class equipment_lend(models.Model):
@@ -115,17 +193,18 @@ class equipment_get(models.Model):
 
     @api.multi
     def subscribe(self):
-        return {'aaaaaaaaaaaaaa'}
+
+        return {}
 
     @api.multi
     def action_to_confirm(self):
         owners = []
         for sn in self.SN:
-            if sn.owners:
+            if sn.owner:
                 self.owners |= sn.owner
 
         if len(self.owners) ==1:
-            if  (self.owners[0] == self.user_id or self.owners[0] == self.env['res.groups'].search([('name','=',u'资产管理员')],limit=1)).users[0] and self.user_id != self.env['res.groups'].search(['name','=',u'资产管理员'],limit=1):
+            if  (self.owners[0] == self.user_id or self.owners[0] == self.env['res.groups'].search([('name','=',u'资产管理员')],limit=1).users[0]) and self.user_id != self.env['res.groups'].search(['name','=',u'资产管理员'],limit=1):
                 self.state = 'ass_admin'
                 self.approver_id = self.env['res.groups'].search([('name','=',u'资产管理员')],limit=1).users[0]
 
