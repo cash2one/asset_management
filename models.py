@@ -25,6 +25,13 @@ class equipment_info(models.Model):
                                (u'待报废', u"待报废"),
                                (u'暂存设备', u"暂存设备"),
                                 ],string=u"设备用途",required=True)
+    state = fields.Selection([
+        (u'待入库',u'待入库'),
+        (u'已入库',u'已入库'),
+        (u'领用',u'领用'),
+        (u'借用',u'借用'),
+        (u'IT环境',u'IT环境'),
+    ],string='状态',default=u'待入库')
     owner = fields.Many2one('res.users',string=u"归属人",required=True)
     company = fields.Boolean(string=u"公司资产",required=True)
     note = fields.Char(string=u"备注")
@@ -43,11 +50,16 @@ class equipment_storage(models.Model):
     _name = 'asset_management.equipment_storage'
     _rec_name = 'storage_id'
 
+    @api.multi
+    def _default_SN(self):
+        print self.env['asset_management.equipment_info'].search([('state', '=', u'待入库')])
+        return self.env['asset_management.equipment_info'].search([('state', '=', u'待入库')])
+
     storage_id = fields.Char(string=u"入库单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
     # SN = fields.Char()
-    SN = fields.Many2many('asset_management.equipment_info',"storge_equipment_ref",string=u"设备SN",required=True)
+    SN = fields.Many2many('asset_management.equipment_info',"storge_equipment_ref",string=u"设备SN",required=True,default=_default_SN,)
     state = fields.Selection([
         ('demander', u"需求方申请"),
         ('ass_admin', u"资产管理员"),

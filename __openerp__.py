@@ -10,7 +10,7 @@
 # data files which are always installed
         'data': [
                 'security/ir.model.access.csv',
-                'views/asset_management_menu.xml',
+
                 'views/asset_management_view.xml',
                 'views/asset_management_lend_view.xml',
                 'views/asset_storage_workflow.xml',
@@ -21,6 +21,7 @@
                 'data.xml',
                 'security/resource_security.xml',
                 'views/asset_management_link.xml',
+                'views/asset_management_menu.xml',
 
                 ],
 # data files which are only installed in "demonstration mode"
