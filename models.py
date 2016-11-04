@@ -146,26 +146,152 @@ class equipment_storage(models.Model):
         self.approver_id = self.user_id
 
 
+
 class equipment_lend(models.Model):
     _name = 'asset_management.equipment_lend'
     _rec_name = 'lend_id'
 
+    def _default_SN(self):
+        return self.env['asset_management.equipment_info'].browse(self._context.get('active_ids'))
+
+    @api.multi
+    def subscribe(self):
+        return {'aaaaaaaaaaaaaa'}
+
     lend_id = fields.Char(string=u"借用单号")
-    user_id = fields.Many2one('res.users', string=u"申请人", required=True)
-    approver_id = fields.Many2one('res.users', string=u"审批人")
-    SN = fields.Many2many('asset_management.equipment_info',"lend_equipment_ref", string=u"设备SN", required=True)
+    user_id = fields.Many2one('res.users', string=u"申请人",default=lambda self: self.env.user,required=True)
+    #user_id = fields.Many2one('res.users', string=u"申请人",required=True)
+    approver_id = fields.Many2one('res.users',default=lambda self: self.env.user,string=u"审批人")
+    SN = fields.Many2many('asset_management.equipment_info',"lend_equipment_ref", string=u"设备SN",default=_default_SN,required=True)
     state = fields.Selection([
             ('demander', u"需求方申请"),
+            ('ass_owner', u"资产归属人"),
             ('ass_admin', u"资产管理员"),
             ('dem_leader', u"需求方直属部门领导"),
             ('dem_leader_manager', u"需求方直属主管"),# 副总裁级
             ('ass_director', u"资产管理部门负责人"),
             ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
+        ('done', u'结束'),
     ], string=u"状态", required=True,default='demander')
     lend_date = fields.Date(string=u"借用日期",required=True)
     promise_date = fields.Date(string=u"承诺归还日期",required=True)
     actual_date = fields.Date(string=u"实际归还日期",required=True)
     lend_purpose = fields.Char(string=u"借用目的",required=True)
+    owners = fields.Many2many('res.users',string=u"归属人们")
+    lend_exam_ids = fields.One2many('asset_management.lend_examine','lend_id',string='审批记录')
+
+
+
+    @api.multi
+    def action_to_confirm(self):
+        for sn in self.SN:
+            if sn.equipment_use == u"公共备件":
+                continue
+            elif sn.equipment_use == u"专用备件":
+                self.owners |= sn.owner
+
+        if len(self.owners) == 1:#改动一去掉 .user[0]
+            if (self.owners[0] == self.user_id or self.owners[0] == self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1))\
+                    and self.user_id != self.env['res.groups'].search(\
+                   ['name', '=', u'资产管理员'], limit=1):
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+                self.state = 'ass_admin'
+            elif self.owners[0] == self.user_id == \
+                    self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0] and self.user_id != \
+                    self.user_id.employee_ids[0].department_id.manager_id:
+                self.approver_id = self.user_id
+                self.state = 'dem_leader'
+
+            elif self.userb_id != self.owners[0]:
+                self.approver_id = self.owners[0]
+                self.state = 'ass_owner'
+                self.owners -= self.approver_id#没有归属人了
+
+        elif len(self.owners) > 1:
+            if self.user_id in self.owners:
+                self.owners -= self.user_id
+
+            if self.env['res.groups'].search([('name', '=', '资产管理员')], limit=1).users[0] in self.owners:
+                self.owners -= self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+            if self.user_id.employee_ids[0].department_id.manager_id.user_id in self.owners:
+                self.owners -= self.user_id.employee_ids[0].department_id.manager_id.user_id
+
+            if len(self.owners)>0:
+                self.state = 'ass_owner'
+                self.approver_id = self.owners[0]
+                self.owners -= self.approver_id#如果归属人还剩两个
+            elif len(self.owners)==0:
+                self.state = 'ass_admin'
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+        elif len(self.owners) == 0:
+            self.state = 'ass_admin'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+        else:
+            print '<1' * 80
+
+    @api.multi
+    def action_to_next(self):
+        if self.state == 'ass_owner':
+            if len(self.owners):
+                self.state = 'ass_owner'
+                self.approver_id = self.owners[0]
+                self.owners -= self.approver_id
+            else:
+                if self.user_id !=self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]:
+                    self.state = 'ass_admin'
+                    self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+                    print self.approver_id.name
+                else :
+                    self.state = 'dem_leader'
+                    self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+                    print self.approver_id.name
+
+        elif self.state == 'ass_admin':
+            if self.user_id != self.user_id.employee_ids[0].department_id.manager_id.user_id:
+                self.state = 'dem_leader'
+                self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+                print self.approver_id.name
+            else:
+                self.state = 'dem_leader_manager'
+                if self.user_id.employee_ids[0].department_id.parent_id.manager_id.job_id.name == u'总经理':
+                    self.approver_id = self.user_id.employee_ids[0].department_id.parent_id.manager_id.user_id
+                else:
+                    self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+
+        elif self.state == 'dem_leader':
+            self.state = 'dem_leader_manager'
+            if self.user_id.employee_ids[0].department_id.parent_id.manager_id.job_id.name == u'总经理':
+                self.approver_id = self.user_id.employee_ids[0].department_id.parent_id.manager_id.user_id
+            else:
+                self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+
+        elif self.state == 'dem_leader_manager':
+            self.state = 'ass_director'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门负责人')], limit=1).users[0]
+            print self.approver_id.name
+        elif self.state == 'ass_director':
+            self.state = 'ass_admin_manager'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门主管')], limit=1).users[0]
+            print self.approver_id.name
+        elif self.state == 'ass_admin_manager':
+            self.state = 'done'
+            # self.approver_id = None
+            self.approver_id = self.user_id
+
+        self.env['asset_management.lend_examine'].create(
+            {'approver_id': self.approver_id.id, 'result': u'通过', 'lend_id': self.id})
+
+
+    @api.multi
+    def action_to_demander(self):
+        self.state = 'demander'
+        self.approver_id = self.user_id
+        self.env['asset_management.lend_examine'].create(
+            {'approver_id': self.approver_id.id, 'result': u'拒绝', 'lend_id': self.id})
+
 
 class equipment_get(models.Model):
     _name = 'asset_management.equipment_get'
@@ -275,13 +401,13 @@ class equipment_get(models.Model):
             self.approver_id = self.env['res.groups'].search([('name','=',u'资产管理部门负责人')],limit=1).users[0]
 
         elif self.state == 'ass_director':
-
             self.state = 'ass_admin_manager'
             self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门主管')], limit=1).users[0]
-        elif self.state == 'ass_admin_manager':
 
+        elif self.state == 'ass_admin_manager':
             self.state = 'done'
             self.approver_id = None
+
 
     @api.multi
     def action_to_demander(self):
@@ -294,19 +420,26 @@ class equipment_it_apply(models.Model):
     _name = 'asset_management.equipment_it_apply'
     _rec_name = 'apply_id'
 
+    def _default_SN(self):
+        return self.env['asset_management.equipment_info'].browse(self._context.get('active_ids'))
+
+    @api.multi
+    def subscribe(self):
+        return {'aaaaaaaaaaaaaa'}
+
     apply_id = fields.Char(string=u"申请IT环境单号")
     user_id = fields.Many2one('res.users', string=u"申请人", required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人")
-    SN = fields.Many2many('asset_management.equipment_info',"IT_equipment_ref" ,string=u"设备SN", required=True)
+    SN = fields.Many2many('asset_management.equipment_info',"IT_equipment_ref" ,string=u"设备SN",default=_default_SN, required=True)
     state = fields.Selection([
-
-             ('demander', u"需求方申请"),
-             ('ass_admin', u"资产管理员"),
-             ('dem_leader', u"需求方直属部门领导"),
-             ('dem_leader_manager', u"需求方直属主管"),# 副总裁级
-             ('ass_director', u"资产管理部门负责人"),
-             ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
-    ], string=u"状态", required=True,default='demander')
+        ('demander', u"需求方申请"),
+        ('ass_owner', u"资产归属人"),
+        ('ass_admin', u"资产管理员"),
+        ('dem_leader', u"需求方直属部门领导"),
+        ('ass_director', u"资产管理部门负责人"),
+        ('ass_admin_manager', u"资产管理部门主管"),  # 副总裁级MA
+        ('done', u'结束')
+    ], string=u"状态", required=True, default='demander')
     use_begin = fields.Date(string=u"使用开始时间",required=True)
     use_over = fields.Date(string=u"使用结束时间",required=True)
     up_date = fields.Date(string=u"设备上架时间",required=True)
@@ -314,6 +447,119 @@ class equipment_it_apply(models.Model):
     tester = fields.Many2one('res.users',string=u"测试人员",required=True)
     # 这个需要邮件提醒
     application_purpose = fields.Char(string=u"申请目的",required=True)
+    owners = fields.Many2many('res.users',string=u"归属人们")
+    apply_exam_ids = fields.One2many('asset_management.it_examine','IT_id',string='审批记录')
+
+    @api.multi
+    def action_to_confirm(self):
+        for sn in self.SN:
+            if sn.equipment_use == u"公共备件":
+                continue
+            elif sn.equipment_use == u"专用备件":
+                self.owners |= sn.owner
+
+        if len(self.owners) == 1:  # 改动一去掉 .user[0]
+            if (self.owners[0] == self.user_id or self.owners[0] == self.env['res.groups'].search(
+                    [('name', '=', u'资产管理员')], limit=1)) \
+                    and self.user_id != self.env['res.groups'].search( \
+                            ['name', '=', u'资产管理员'], limit=1):
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+                self.state = 'ass_admin'
+            elif self.owners[0] == self.user_id == \
+                    self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0] and self.user_id != \
+                    self.user_id.employee_ids[0].department_id.manager_id:
+                self.approver_id = self.user_id
+                self.state = 'dem_leader'
+
+            elif self.userb_id != self.owners[0]:
+                self.approver_id = self.owners[0]
+                self.state = 'ass_owner'
+                self.owners -= self.approver_id  # 没有归属人了
+
+        elif len(self.owners) > 1:
+            if self.user_id in self.owners:
+                self.owners -= self.user_id
+
+            if self.env['res.groups'].search([('name', '=', '资产管理员')], limit=1).users[0] in self.owners:
+                self.owners -= self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+            if self.user_id.employee_ids[0].department_id.manager_id.user_id in self.owners:
+                self.owners -= self.user_id.employee_ids[0].department_id.manager_id.user_id
+
+            if len(self.owners) > 0:
+                self.state = 'ass_owner'
+                self.approver_id = self.owners[0]
+                self.owners -= self.approver_id  # 如果归属人还剩两个
+            elif len(self.owners) == 0:
+                self.state = 'ass_admin'
+                self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+        elif len(self.owners) == 0:
+            self.state = 'ass_admin'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+
+        else:
+            print '<1' * 80
+
+    @api.multi
+    def action_to_next(self):
+        if self.state == 'ass_owner':
+            if len(self.owners):
+                self.state = 'ass_owner'
+                self.approver_id = self.owners[0]
+                self.owners -= self.approver_id
+            else:
+                if self.user_id != self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]:
+                    self.state = 'ass_admin'
+                    self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理员')], limit=1).users[0]
+                    print self.approver_id.name
+                else:
+                    self.state = 'dem_leader'
+                    self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+                    print self.approver_id.name
+
+        elif self.state == 'ass_admin':
+            if self.user_id != self.user_id.employee_ids[0].department_id.manager_id.user_id:
+                self.state = 'dem_leader'
+                self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+                print self.approver_id.name
+            else:
+                self.state = 'dem_leader_manager'
+                if self.user_id.employee_ids[0].department_id.parent_id.manager_id.job_id.name == u'总经理':
+                    self.approver_id = self.user_id.employee_ids[0].department_id.parent_id.manager_id.user_id
+                else:
+                    self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+
+        elif self.state == 'dem_leader':
+            self.state = 'dem_leader_manager'
+            if self.user_id.employee_ids[0].department_id.parent_id.manager_id.job_id.name == u'总经理':
+                self.approver_id = self.user_id.employee_ids[0].department_id.parent_id.manager_id.user_id
+            else:
+                self.approver_id = self.user_id.employee_ids[0].department_id.manager_id.user_id
+
+        elif self.state == 'dem_leader_manager':
+            self.state = 'ass_director'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门负责人')], limit=1).users[0]
+            print self.approver_id.name
+        elif self.state == 'ass_director':
+            self.state = 'ass_admin_manager'
+            self.approver_id = self.env['res.groups'].search([('name', '=', u'资产管理部门主管')], limit=1).users[0]
+            print self.approver_id.name
+        elif self.state == 'ass_admin_manager':
+            self.state = 'done'
+            # self.approver_id = None
+            self.approver_id = self.user_id
+
+        self.env['asset_management.it_examine'].create(
+            {'approver_id': self.approver_id.id, 'result': u'通过', 'IT_id': self.id})
+
+    @api.multi
+    def action_to_demander(self):
+        self.state = 'demander'
+        self.approver_id = self.user_id
+        self.env['asset_management.it_examine'].create(
+            {'approver_id': self.approver_id.id, 'result': u'拒绝', 'IT_id': self.id})
+
 
 class entry_store_examine(models.Model):
     _name='asset_management.entry_store_examine'
@@ -335,7 +581,7 @@ class lend_examine(models.Model):
 
     exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users', required='True', string='审批人')
-    date = fields.Date(string='审批时间')
+    date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
     result = fields.Selection([
         (u'通过', u"通过"),
         (u'拒绝', u"拒绝"),
@@ -343,6 +589,7 @@ class lend_examine(models.Model):
     ], string=u"通过")
     lend_id = fields.Many2one('asset_management.equipment_lend', string='借用单')
     reason = fields.Char(string='原因')
+
 class get_examine(models.Model):
     _name = 'asset_management.get_examine'
     _rec_name = 'exam_num'
@@ -364,7 +611,7 @@ class IT_examine(models.Model):
 
     exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users', required='True', string='审批人')
-    date = fields.Date(string='审批时间')
+    date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
     result = fields.Selection([
         (u'通过', u"通过"),
         (u'拒绝', u"拒绝"),
