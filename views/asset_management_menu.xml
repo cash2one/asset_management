@@ -19,7 +19,7 @@
             <field name="res_model">asset_management.equipment_storage</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name ="domain">['|',('stroe_exam_ids.approver_id','ilike',uid),('user_id','=',uid),('state','!=','demander')]</field>
+            <field name ="domain">['|',('store_exam_ids.approver_id','ilike',uid),('user_id','=',uid),('state','!=','demander')]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">创建新的流程-设备入库
                 </p>

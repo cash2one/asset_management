@@ -27,7 +27,7 @@ class equipment_info(models.Model):
                                 ],string=u"设备用途",required=True)
     state = fields.Selection([
         (u'待入库',u'待入库'),
-        (u'入库中',u'入库中',)
+        (u'入库中',u'入库中'),
         (u'已入库',u'已入库'),
         (u'领用',u'领用'),
         (u'借用',u'借用'),
@@ -59,7 +59,7 @@ class equipment_storage(models.Model):
     user_id = fields.Many2one('res.users', string=u"申请人",default=lambda self: self.env.user, required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user,)
     # SN = fields.Char()
-    SN = fields.Many2many('asset_management.equipment_info',"storge_equipment_ref",string=u"设备SN",required=True,default=_default_SN,)
+    SN = fields.Many2many('asset_management.equipment_info',"storge_equipment_ref",string=u"设备SN",required=True,default=_default_SN,domain=[('state','=',u'待入库')])
     state = fields.Selection([
         ('demander', u"需求方申请"),
         ('ass_admin', u"资产管理员"),
@@ -68,7 +68,7 @@ class equipment_storage(models.Model):
         ('done',u'完成')
     ],string=u"状态",required=True,default='demander')
     owners = fields.Many2many('res.users', string=u'设备归属人', ondelete='set null')
-    stroe_exam_ids = fields.One2many('asset_management.entry_store_examine', 'store_id', string='审批记录')
+    store_exam_ids = fields.One2many('asset_management.entry_store_examine', 'store_id', string='审批记录')
 
     @api.multi
     def action_to_confirm(self):
@@ -176,7 +176,7 @@ class equipment_get(models.Model):
     get_id = fields.Char(string=u"领用单号")
     user_id = fields.Many2one('res.users', string=u"申请人", default=lambda self: self.env.user,required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user)
-    SN = fields.Many2many('asset_management.equipment_info',"get_equipment_ref",string=u"设备SN", default=_default_SN,required=True)
+    SN = fields.Many2many('asset_management.equipment_info',"get_equipment_ref",string=u"设备SN", default=_default_SN,required=True,domain=[('state','=',u'已入库'),])
     state = fields.Selection([
              ('demander', u"需求方申请"),
              ('ass_owner', u"资产归属人"),
