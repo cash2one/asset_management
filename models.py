@@ -4,9 +4,9 @@ from openerp import models
 
 class equipment_info(models.Model):
     _name ='asset_management.equipment_info'
-    _rec_name = 'SN'
+    _rec_name = 'sn'
 
-    SN = fields.Char(string=u"序列号",required=True)
+    sn = fields.Char(string=u"序列号",required=True)
     firms = fields.Char( string=u"设备厂商",required=True)
     device_type = fields.Char(string=u"设备类型",required=True)
     asset_number = fields.Char(string=u"资产编号",required=True)
@@ -27,8 +27,8 @@ class equipment_info(models.Model):
                                 ],string=u"设备用途",required=True)
     state = fields.Selection([
         (u'待入库',u'待入库'),
-        (u'入库中',u'入库中'),
         (u'已入库',u'已入库'),
+        (u'流程中',u'流程中'),
         (u'领用',u'领用'),
         (u'借用',u'借用'),
         (u'IT环境',u'IT环境'),
@@ -46,6 +46,14 @@ class equipment_info(models.Model):
     get_ids = fields.Many2many('asset_management.equipment_get',"get_equipment_ref",)
     lend_ids = fields.Many2many('asset_management.equipment_lend',"lend_equipment_ref",)
     apply_ids = fields.Many2many('asset_management.equipment_it_apply',"IT_equipment_ref" ,)
+
+
+    _sql_constraints = [
+        ('SN UNIQUE',
+         'UNIQUE(sn)',
+         '该序列号已存在'),
+    ]
+
 
 class equipment_storage(models.Model):
     _name = 'asset_management.equipment_storage'
@@ -69,6 +77,22 @@ class equipment_storage(models.Model):
     ],string=u"状态",required=True,default='demander')
     owners = fields.Many2many('res.users', string=u'设备归属人', ondelete='set null')
     store_exam_ids = fields.One2many('asset_management.entry_store_examine', 'store_id', string='审批记录')
+
+    def create(self, cr, uid, vals, context=None):
+        template_model = self.pool.get('asset_management.equipment_info')
+        devices = template_model.browse(cr, uid, vals['SN'][0][2], context=None)
+        for device in devices:
+            device.state = u'流程中'
+        dates = fields.Date.today().split('-')
+        date = ''.join(dates)
+        template_model = self.pool.get('asset_management.equipment_storage')
+        ids = template_model.search(cr, uid, [('storage_id', 'like', date)], context=None)
+        stores = template_model.browse(cr, uid, ids, context=None).sorted(key=lambda r: r.storage_id)
+        if len(stores):
+            vals['storage_id'] = 'S' + str(int(stores[-1].storage_id[1:]) + 1)
+        else:
+            vals['storage_id'] = 'S' + date + '001'
+        return super(equipment_storage, self).create(cr, uid, vals, context=context)
 
     @api.multi
     def action_to_confirm(self):
@@ -136,6 +160,8 @@ class equipment_storage(models.Model):
 
         elif self.state == 'ass_admin_manager':
             self.state = 'done'
+            for device in self.SN:
+                device.state = u'已入库'
             self.approver_id = None
 
     @api.multi
@@ -180,6 +206,21 @@ class equipment_lend(models.Model):
     owners = fields.Many2many('res.users',string=u"归属人们")
     lend_exam_ids = fields.One2many('asset_management.lend_examine','lend_id',string='审批记录')
 
+    def create(self, cr, uid, vals, context=None):
+        template_model = self.pool.get('asset_management.equipment_info')
+        devices = template_model.browse(cr, uid, vals['SN'][0][2], context=None)
+        for device in devices:
+            device.state = u'借用'
+        dates = fields.Date.today().split('-')
+        date = ''.join(dates)
+        template_model = self.pool.get('asset_management.equipment_lend')
+        ids = template_model.search(cr, uid, [('lend_id', 'like', date)], context=None)
+        lends = template_model.browse(cr, uid, ids, context=None).sorted(key=lambda r: r.lend_id)
+        if len(lends):
+            vals['lend_id'] = 'L' + str(int(lends[-1].lend_id[1:]) + 1)
+        else:
+            vals['lend_id'] = 'L' + date + '001'
+        return super(equipment_lend, self).create(cr, uid, vals, context=context)
 
 
     @api.multi
@@ -278,8 +319,11 @@ class equipment_lend(models.Model):
             print self.approver_id.name
         elif self.state == 'ass_admin_manager':
             self.state = 'done'
-            # self.approver_id = None
-            self.approver_id = self.user_id
+            for device in self.SN:
+                device.state = u'借用'
+                self.approver_id = None
+
+            # self.approver_id = self.user_id
 
         self.env['asset_management.lend_examine'].create(
             {'approver_id': self.approver_id.id, 'result': u'通过', 'lend_id': self.id})
@@ -302,7 +346,7 @@ class equipment_get(models.Model):
     get_id = fields.Char(string=u"领用单号")
     user_id = fields.Many2one('res.users', string=u"申请人", default=lambda self: self.env.user,required=True)
     approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user)
-    SN = fields.Many2many('asset_management.equipment_info',"get_equipment_ref",string=u"设备SN", default=_default_SN,required=True,domain=[('state','=',u'已入库'),])
+    SN = fields.Many2many('asset_management.equipment_info',"get_equipment_ref",string=u"设备SN", default=_default_SN,required=True)
     state = fields.Selection([
              ('demander', u"需求方申请"),
              ('ass_owner', u"资产归属人"),
@@ -317,8 +361,27 @@ class equipment_get(models.Model):
     owners = fields.Many2many('res.users',string=u'设备归属人',ondelete = 'set null')
     get_exam_ids = fields.One2many('asset_management.get_examine','get_id',string='审批记录')
 
+    def create(self, cr, uid, vals, context=None):
+        template_model = self.pool.get('asset_management.equipment_info')
+        print vals['SN'][0][2]
+        devices = template_model.browse(cr, uid, vals['SN'][0][2], context=None)
+        for device in devices:
+            device.state = u'领用'
+        dates = fields.Date.today().split('-')
+        date = ''.join(dates)
+        template_model = self.pool.get('asset_management.equipment_get')
+        ids = template_model.search(cr, uid, [('get_id', 'like', date)], context=None)
+        gets = template_model.browse(cr, uid, ids, context=None).sorted(key=lambda r: r.get_id)
+        if len(gets):
+            vals['get_id'] = 'G' + str(int(gets[-1].get_id[1:]) + 1)
+        else:
+            vals['get_id'] = 'G' + date + '001'
+        return super(equipment_get, self).create(cr, uid, vals, context=context)
+
     @api.multi
     def subscribe(self):
+        # for sn in self.SN:
+        #     sn.state = '领用'
 
         return {}
 
@@ -406,6 +469,8 @@ class equipment_get(models.Model):
 
         elif self.state == 'ass_admin_manager':
             self.state = 'done'
+            for device in self.SN:
+                device.state = u'领用'
             self.approver_id = None
 
 
@@ -449,6 +514,22 @@ class equipment_it_apply(models.Model):
     application_purpose = fields.Char(string=u"申请目的",required=True)
     owners = fields.Many2many('res.users',string=u"归属人们")
     apply_exam_ids = fields.One2many('asset_management.it_examine','IT_id',string='审批记录')
+
+    def create(self, cr, uid, vals, context=None):
+        template_model = self.pool.get('asset_management.equipment_info')
+        devices = template_model.browse(cr, uid, vals['SN'][0][2], context=None)
+        for device in devices:
+            device.state = u'IT环境'
+        dates = fields.Date.today().split('-')
+        date = ''.join(dates)
+        template_model = self.pool.get('asset_management.equipment_it_apply')
+        ids = template_model.search(cr, uid, [('apply_id', 'like', date)], context=None)
+        applys = template_model.browse(cr, uid, ids, context=None).sorted(key=lambda r: r.apply_id)
+        if len(applys):
+            vals['apply_id'] = 'I' + str(int(applys[-1].apply_id[1:]) + 1)
+        else:
+            vals['apply_id'] = 'I' + date + '001'
+        return super(equipment_it_apply, self).create(cr, uid, vals, context=context)
 
     @api.multi
     def action_to_confirm(self):
@@ -548,7 +629,10 @@ class equipment_it_apply(models.Model):
         elif self.state == 'ass_admin_manager':
             self.state = 'done'
             # self.approver_id = None
-            self.approver_id = self.user_id
+            for device in self.SN:
+                device.state = u'IT环境'
+                self.approver_id = None
+            # self.approver_id = self.user_id
 
         self.env['asset_management.it_examine'].create(
             {'approver_id': self.approver_id.id, 'result': u'通过', 'IT_id': self.id})
@@ -563,8 +647,9 @@ class equipment_it_apply(models.Model):
 
 class entry_store_examine(models.Model):
     _name='asset_management.entry_store_examine'
-    _rec_name = 'exam_num'
-    exam_num = fields.Char(sting='审批id')
+    # _rec_name = 'exam_num'
+
+    # exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users',required = 'True',string='审批人')
     date = fields.Date(string='审批时间')
     result=fields.Selection([
@@ -577,9 +662,9 @@ class entry_store_examine(models.Model):
 
 class lend_examine(models.Model):
     _name = 'asset_management.lend_examine'
-    _rec_name = 'exam_num'
-
-    exam_num = fields.Char(sting='审批id')
+    # _rec_name = 'exam_num'
+    #
+    # exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users', required='True', string='审批人')
     date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
     result = fields.Selection([
@@ -592,9 +677,9 @@ class lend_examine(models.Model):
 
 class get_examine(models.Model):
     _name = 'asset_management.get_examine'
-    _rec_name = 'exam_num'
-
-    exam_num = fields.Char(sting='审批id')
+    # _rec_name = 'exam_num'
+    #
+    # exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users', required='True', string='审批人')
     date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
     result = fields.Selection([
@@ -607,9 +692,9 @@ class get_examine(models.Model):
 
 class IT_examine(models.Model):
     _name = 'asset_management.it_examine'
-    _rec_name = 'exam_num'
-
-    exam_num = fields.Char(sting='审批id')
+    # _rec_name = 'exam_num'
+    #
+    # exam_num = fields.Char(sting='审批id')
     approver_id = fields.Many2one('res.users', required='True', string='审批人')
     date = fields.Date(string='审批时间',default=lambda self:fields.Date.today())
     result = fields.Selection([

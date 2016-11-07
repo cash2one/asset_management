@@ -307,7 +307,7 @@
             </field>
         </record>
         <act_window id="launch_session_get_wizard"
-                    name="领用"
+                    name="get"
                     src_model="asset_management.equipment_info"
                     res_model="asset_management.equipment_get"
                     view_mode="form"

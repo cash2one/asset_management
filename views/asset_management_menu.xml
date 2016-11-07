@@ -2,13 +2,16 @@
 
 <openerp>
     <data>
-        <record id="asset_info_list_action" model="ir.actions.act_window" >
-            <field name="name">设备信息表</field>
+        <record id="stored_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">库存中的设备</field>
             <field name="res_model">asset_management.equipment_info</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name ="domain">['|',('equipment_use','=',u'公共备件'),('equipment_use','=',u'专用备件'),('state','=',u'已入库')]</field>
+
             <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
            <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the first info
                 </p>
@@ -204,29 +207,94 @@
             <field name="act_window_id" ref="asset_pending_apply_action" />
         </record>
 
+        <record id="my_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">我的设备</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name ="domain">[('owner','=',uid),('state','=','已入库')]</field>
 
+        </record>
+
+        <record id="lended_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">借用设备</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name ="domain">[('state','=',u'借用'),('lend_ids.user_id','like',uid)]</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+
+        </record>
+        <record id="got_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">领用设备</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+             <field name ="domain">[('state','=',u'领用'),('get_ids.user_id','like',uid)]</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+
+        </record>
+        <record id="IT_apply_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">实验室设备</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name ="domain">[('state','=',u'IT环境'),('apply_ids','like',uid)]</field>
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+
+        </record>
+        <record id="examing_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">流程中的设备</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name ="domain">[('state','=',u'流程中')]</field>
+
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+           <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
+        </record>
+        <record id="all_asset_info_action" model="ir.actions.act_window" >
+            <field name="name">所有的设备</field>
+            <field name="res_model">asset_management.equipment_info</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name ="domain">[('state','!=',u'流程中'),('state','!=',u'待入库')]</field>
+
+            <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
+            <field name="view_id" ref="all_asset_management_form_view"/>
+        </record>
 
         <!-- top level menu: no parent -->
         <menuitem id="main_asset_management_menu" name="Asset management"/>
         <!-- A first level in the left side menu is needed before using action= attribute -->
-        <menuitem id="asset_information_menu" name="Asset information" parent="main_asset_management_menu"/>
-        <menuitem id="all_info_menu" name="info Menu" parent="asset_information_menu" action="asset_info_list_action" />
+        <!--<menuitem id="asset_information_menu" name="Asset information" parent="main_asset_management_menu"/>-->
+        <menuitem id="device_menu" name="device_information" parent="main_asset_management_menu" sequence="1"/>
+        <menuitem id="all_device_menu" name="all device" parent="device_menu" action="all_asset_info_action" groups="asset_management.group_ass_admin,asset_management.group_ass_director,asset_management.group_ass_admin_manager"/>
+        <menuitem id="stored_device_menu" name="stored device" parent="device_menu" action="stored_asset_info_action" />
+        <menuitem id="my_device_menu" name="my device" parent="device_menu" action="my_asset_info_action" />
+        <menuitem id="lended_device_menu" name="lended device" parent="device_menu" action="lended_asset_info_action" />
+        <menuitem id="got_device_menu" name="got device" parent="device_menu" action="got_asset_info_action" />
+        <menuitem id="it_apply_device_menu" name="IT applay device" parent="device_menu" action="IT_apply_asset_info_action" />
+        <menuitem id="examing_device_menu" name="examing device" parent="device_menu" action="examing_asset_info_action" />
 
 
-        <menuitem id="the_lending_menu" name="lending Menu" parent="asset_information_menu" />
+        <menuitem id="the_lending_menu" name="lending Menu"  parent="main_asset_management_menu"/>
         <menuitem id="all_pending_lending_menu" name="pending lend Menu" parent="the_lending_menu" action="asset_pending_lending_action" />
         <menuitem id="all_processed_lending_menu" name="processed lend Menu" parent="the_lending_menu" action="asset_processed_lending_action" />
 
-        <menuitem id="all_getting_menu" name="getting Menu" parent="asset_information_menu" />
+        <menuitem id="all_getting_menu" name="getting Menu"  parent="main_asset_management_menu"/>
         <menuitem id="pending_getting_menu" name="pending get Menu" parent="all_getting_menu" action="asset_getting_action" />
         <menuitem id="processed_getting_menu" name="processed get Menu" parent="all_getting_menu" action="processed_asset_getting_action" />
 
-        <menuitem id="all_storing_menu" name="store Menu" parent="asset_information_menu" />
+        <menuitem id="all_storing_menu" name="store Menu"  parent="main_asset_management_menu"/>
         <menuitem id="pending_storing_menu" name="storing Menu" parent="all_storing_menu" action="pending_asset_storing_action" />
         <menuitem id="processed_storing_menu" name="processed storing Menu" parent="all_storing_menu" action="processed_asset_storing_action" />
 
 
-        <menuitem id="all_applying_menu" name="applying Menu" parent="asset_information_menu" />
+        <menuitem id="all_applying_menu" name="applying Menu"  parent="main_asset_management_menu"/>
         <menuitem id="all_pending_applying_menu" name="pending apply Menu" parent="all_applying_menu" action="asset_pending_apply_action" />
         <menuitem id="all_processed_applying_menu" name="processed apply Menu" parent="all_applying_menu" action="asset_processed_apply_action" />
 
