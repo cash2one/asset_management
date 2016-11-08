@@ -18,34 +18,47 @@ openerp.asset_management=function(instance){
                         var display_name=inner_action.display_name;
                         if(display_name){
                             clearInterval(timer);
-                            self.addBtn(display_name)
+                            self.addAction(display_name);
                             watch(action_manager,"inner_action",function(pro,action,newVal,oldVal){
-                                self.addBtn(newVal.display_name);
+                                self.addAction(newVal.display_name);
                             });
                         }
                     }
                 }
             },100)
         },
-        //
-        addBtn:function(display_name){
+        //视图加载完成后定义自己的动作
+        addAction:function(title){
             var self=this;
-            if(display_name=="设备信息表"){
-                var timer=setInterval(function(){
-                    var btnParent=$('tr.oe_header_row:last>td:last');
-                    if(btnParent.length>0&&($('tr.oe_header_row button.assetM').length==0)){
-                        clearInterval(timer);
-                        var btn=$("<button class='assetM oe_right'>入库</button>");
-                        btnParent.append(btn);
-                        btn.click(function(){
-                            self.jump();
-                        });
+            var timer=setInterval(function(){
+                var targetSpan=$("#oe_main_menu_navbar ul.navbar-left>li.active>a>span.oe_menu_text");
+                if(targetSpan.length){
+                    clearInterval(timer);
+                    var modelTitle=targetSpan.html().trim();
+                    if(modelTitle=="Asset management"||modelTitle=="资产管理"){
+                        self.addBtn(title);//添加自定义按钮
+                        self.removeBtn(title);//删除按钮
+                    }else{
+                        $('#asset_management_removeBtn').remove();
                     }
-                },100)
+                }
+            },100);
+        },
+        addBtn:function(display_name){//添加自定义按钮
+            var self=this;
+            if(display_name=="库存中的设备"){
+                var btnParent=$('tr.oe_header_row:last>td:last');
+                if(btnParent.length>0&&($('tr.oe_header_row button.assetM').length==0)){
+                    var btn=$("<button class='assetM oe_right'>入库</button>");
+                    btnParent.append(btn);
+                    btn.click(function(){
+                        self.jump();
+                    });
+                }
             }
         },
         jump:function(){
-            var $spans = $('.oe_leftbar li.active~li .oe_menu_text');
+            var $spans = $('.oe_leftbar li.active').parents('div[style*=block]').find('.oe_menu_text');
             $spans.each(function(i,v){
                 var text=$(v).html().trim();
                 if(text=="storing Menu"||text=="入库单"){
@@ -59,7 +72,15 @@ openerp.asset_management=function(instance){
                 }
             });
         },
-
+        removeBtn:function(display_name){
+            if(display_name=="库存中的设备"){
+                $('#asset_management_removeBtn').remove();
+            }else{
+                if($('#asset_management_removeBtn').length==0){
+                    $("head").append("<link id='asset_management_removeBtn' rel='stylesheet' href='/asset_management/static/src/css/removeBtn.css' />");
+                }
+            }
+        },
         start:function(){
         //暂时不需要
         }
