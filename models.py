@@ -1,6 +1,9 @@
 #-*-coding:utf-8-*-
 from openerp import fields,api
 from openerp import models
+from email.utils import formataddr
+import email
+from email.header import Header
 
 class equipment_info(models.Model):
     _name ='asset_management.equipment_info'
@@ -53,6 +56,27 @@ class equipment_info(models.Model):
          'UNIQUE(sn)',
          '该序列号已存在'),
     ]
+
+    def send_email(self, cr, uid, users, data=[], context=None):
+        # template_model = self.pool.get('email.template')
+        # ids = template_model.search(cr, uid, [('name', '=', 'case邮件提醒')], context=None)
+        # template = template_model.browse(cr, uid, ids, context=None)
+        to_list = []
+        for user in users:
+            to_list.append(formataddr((Header(user.name, 'utf-8').encode(), user.email)))
+        mail_mail = self.pool.get('mail.mail')
+        for i in range(len(data)):
+            if not data[i]:
+                data[i] = ''
+        mail_id = mail_mail.create(cr, uid, {
+            'body_html': '<div><p>您好:</p>'
+                         '<p>这个case需要您处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
+            # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
+            'subject': data[0] + u',' + data[1] + u',' + data[2],
+            'email_to': to_list,
+            'auto_delete': True,
+        }, context=context)
+        mail_mail.send(cr, uid, [mail_id], context=context)
 
 
 class equipment_storage(models.Model):
