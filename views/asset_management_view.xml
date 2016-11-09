@@ -195,7 +195,7 @@
             <field name="arch" type="xml">
                 <form string="equipment_storage Form" create="false">
                      <header>
-                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
+                         <button name="action_to_confirm" type="object" string="直接提交" states="demander" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
@@ -217,9 +217,9 @@
                     </group>
                     <footer>
                         <button name="subscribe" type="object"
-                                string="Subscribe" class="oe_highlight"/>
+                                string="直接提交" class="oe_highlight"/>
                         or
-                        <button special="cancel" string="Cancel"/>
+                        <button special="cancel" string="取消提单"/>
                     </footer>
                 </form>
             </field>
@@ -230,9 +230,9 @@
             <field name="arch" type="xml">
                 <form string="equipment_storage Form" create="false">
                      <header>
-                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
-                        <button name="action_to_draft" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
-                        <button name="action_to down" type="workflow" string="拒绝" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                         <button name="action_to_confirm" type="object" string="提交" states="demander" class="oe_highlight" />
+                        <button name="action_to_next" type="object" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to_demander" type="object" string="拒绝" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
@@ -261,9 +261,6 @@
             <field name="arch" type="xml">
                 <form string="equipment_storage Form" create="false">
                      <header>
-                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
-                        <button name="action_to_draft" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
-                        <button name="action_to down" type="workflow" string="拒绝" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>

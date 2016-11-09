@@ -172,6 +172,7 @@
             <field name="arch" type="xml">
                 <form string="equipment_storage Form" create="false" >
                      <header>
+                       <button name="action_to_renew" type="object" states ='done'  string="续借"  class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
