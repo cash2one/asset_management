@@ -8,6 +8,7 @@ openerp.asset_management=function(instance){
     instance.asset_management={};
 
     instance.asset_management.Widget=instance.web.Widget.extend({
+        menuId:-1,//初始化菜单ID
         init:function(){
             var self=this;
             var timer=setInterval(function(){
@@ -38,6 +39,7 @@ openerp.asset_management=function(instance){
                     if(modelTitle=="Asset management"||modelTitle=="资产管理"){
                         self.addBtn(title);//添加自定义按钮
                         self.removeBtn(title);//删除按钮
+                        self.menuId=targetSpan.parent("a").attr("data-menu");
                     }else{
                         $('#asset_management_removeBtn').remove();
                     }
@@ -58,7 +60,7 @@ openerp.asset_management=function(instance){
             }
         },
         jump:function(){
-            var $spans = $('.oe_leftbar li.active').parents('div[style*=block]').find('.oe_menu_text');
+            var $spans = $("div[data-menu-parent="+this.menuId+"] .oe_menu_text");
             $spans.each(function(i,v){
                 var text=$(v).html().trim();
                 if(text=="storing Menu"||text=="入库单"){
