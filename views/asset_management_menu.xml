@@ -61,13 +61,12 @@
         </record>
 
         <record id="asset_pending_lending_action" model="ir.actions.act_window" >
-            <field name="name">设备借用申请</field>
+            <field name="name">借用申请待处理</field>
             <field name="res_model">asset_management.equipment_lend</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">['|'('approver_id','=',uid),('user_id','='uid'),('state','=','done')]</field>-->
             <field name ="domain">[('approver_id','=',uid)]</field>
-            <!--<field name ="domain"></field>-->
-
             <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
            <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
             <field name="help" type="html">
@@ -86,13 +85,11 @@
             <field name="act_window_id" ref="asset_pending_lending_action" />
         </record>
         <record id="asset_processed_lending_action" model="ir.actions.act_window" >
-            <field name="name">已处理设备借用申请</field>
+            <field name="name">借用申请已处理</field>
             <field name="res_model">asset_management.equipment_lend</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name ="domain">['|',('lend_exam_ids.approver_id','ilike',uid),('user_id','=',uid),('state','!=','demander')]</field>
-            <!--<field name ="domain">['|',('user_id','=',uid),('state','=','done')]</field>-->
-
             <!--<field name="search_view_id" ref="asset_management_search_view"></field>-->
            <!-- <field name="view_id" ref="resource_cost_tree_view"/>-->
             <field name="help" type="html">
@@ -110,9 +107,6 @@
             <field name="view_id" ref="asset_lend_processed_form_view" />
             <field name="act_window_id" ref="asset_processed_lending_action" />
         </record>
-
-
-
 
         <record id="asset_getting_action" model="ir.actions.act_window" >
             <field name="name">设备领用</field>
@@ -161,7 +155,7 @@
             <field name="act_window_id" ref="processed_asset_getting_action" />
         </record>
         <record id="asset_processed_apply_action" model="ir.actions.act_window" >
-            <field name="name">已处理设备IT环境申请</field>
+            <field name="name">IT环境申请已处理</field>
             <field name="res_model">asset_management.equipment_it_apply</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -184,7 +178,7 @@
             <field name="act_window_id" ref="asset_processed_apply_action" />
         </record>
         <record id="asset_pending_apply_action" model="ir.actions.act_window" >
-            <field name="name">设备IT环境申请</field>
+            <field name="name">IT环境申请待处理</field>
             <field name="res_model">asset_management.equipment_it_apply</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

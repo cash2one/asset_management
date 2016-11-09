@@ -304,7 +304,7 @@ class equipment_lend(models.Model):
             self.state = 'done'
             for device in self.SN:
                 device.state = u'借用'
-                self.approver_id = None
+            self.approver_id = None
 
             # self.approver_id = self.user_id
 
@@ -602,7 +602,7 @@ class equipment_it_apply(models.Model):
             # self.approver_id = None
             for device in self.SN:
                 device.state = u'IT环境'
-                self.approver_id = None
+            self.approver_id = None
             # self.approver_id = self.user_id
 
         self.env['asset_management.it_examine'].create(
