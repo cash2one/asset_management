@@ -11,9 +11,7 @@
                         <button name="action_to_demander" type="object" string="退回" states="ass_admin,owner,ass_admin_manager" class="oe_highlight" />
                         <button name="action_to_next" type="object" string="同意" states="ass_admin,owner,ass_admin_manager" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
-
                     </header>
-
                     <group>
                         <group>
                             <field name="storage_id" string = "入库单号"/>
@@ -193,7 +191,7 @@
             <field name="name">equipment_it_apply.form</field>
             <field name="model" >asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_apply Form" create="false">
                      <header>
                          <button name="action_to_confirm" type="object" string="直接提交" states="demander" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
@@ -228,7 +226,7 @@
             <field name="name">equipment_it_apply.form</field>
             <field name="model" >asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_apply Form" create="false">
                      <header>
                          <button name="action_to_confirm" type="object" string="提交" states="demander" class="oe_highlight" />
                         <button name="action_to_next" type="object" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
@@ -259,7 +257,7 @@
             <field name="name">equipment_it_apply.form</field>
             <field name="model" >asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_apply Form" create="false">
                      <header>
                         <field name="state" widget="statusbar"/>
                      </header>
@@ -294,7 +292,7 @@
             <field name="name">equipment_it_apply.tree</field>
             <field name="model">asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree string ="equipment_it_apply" >
                     <field name="apply_id" string = "领用单号"/>
                     <field name="user_id" string = "申请人"/>
                     <field name="tester" string = "测试人员"/>

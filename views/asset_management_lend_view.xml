@@ -114,7 +114,7 @@
             <field name="name">equipment_lend.form</field>
             <field name="model" >asset_management.equipment_lend</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_lend Form" create="false">
                      <header>
                          <button name="action_to_confirm" type="object" states='demander' string="提交"  class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
@@ -133,9 +133,9 @@
                     </group>
                     <footer>
                         <button name="subscribe" type="object"
-                                string="Subscribe" class="oe_highlight"/>
+                                string="选择保存" class="oe_highlight"/>
                         or
-                        <button special="cancel" string="Cancel"/>
+                        <button special="cancel" string="取消提单"/>
                     </footer>
                 </form>
             </field>
@@ -144,40 +144,17 @@
             <field name="name">equipment_lend.form</field>
             <field name="model" >asset_management.equipment_lend</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_lend Form" create="false">
                      <header>
                          <button name="action_to_confirm" type="object" states='demander' string="提交"  class="oe_highlight" />
                         <button name="action_to_demander" type="object" states="ass_admin,ass_owner,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" string="退回"  class="oe_highlight" />
                         <button name="action_to_next" type="object" states="ass_admin,ass_owner,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" string="同意" class="oe_highlight" />
-                        <field name="state" widget="statusbar"/>
+                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
                     <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' />-->
                     <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' mode = 'tree'/>-->
                     <field name="SN" string = "设备" mode="tree"/>
-                    <field name="user_id" string = "申请人"/>
-                    <field name="approver_id" string = "审批人"/>
-                    <field name="lend_date" string = "借用日期"/>
-                    <field name="promise_date" string = "承诺归还日期"/>
-                    <field name="actual_date" string = "实际归还日期"/>
-                    <field name="lend_purpose" string = "借用目的"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="asset_lend_processed_form_view">
-            <field name="name">equipment_lend.form</field>
-            <field name="model" >asset_management.equipment_lend</field>
-            <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false" >
-                     <header>
-                       <button name="action_to_renew" type="object" states ='done'  string="续借"  class="oe_highlight" />
-                        <field name="state" widget="statusbar"/>
-                     </header>
-                    <group>
-                    <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' />-->
-                    <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' mode = 'tree'/>-->
                     <field name="user_id" string = "申请人"/>
                     <field name="approver_id" string = "审批人"/>
                     <field name="lend_date" string = "借用日期"/>
@@ -198,11 +175,44 @@
                 </form>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="asset_lend_processed_form_view">
+            <field name="name">equipment_lend.form</field>
+            <field name="model" >asset_management.equipment_lend</field>
+            <field name="arch" type="xml">
+                <form string="equipment_lend Form" create="false" deleter ="false" >
+                     <header>
+                        <button name="action_to_renew" type="object" states ='done' string="续借"  class="oe_highlight" />
+                        <field name="state" widget="statusbar"/>
+                     </header>
+                    <group>
+                    <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' />-->
+                    <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' mode = 'tree'/>-->
+                    <field name="user_id" string = "申请人"/>
+                    <field name="approver_id" string = "审批人"/>
+                    <field name="lend_date" string = "借用日期"/>
+                    <field name="promise_date" string = "承诺归还日期"/>
+                    <field name="actual_date" string = "实际归还日期"/>
+                    <field name="lend_purpose" string = "借用目的"/>
+                    </group>
+                    <group>
+                        <field name="SN" string = "设备" mode="tree"/>
+                         <field name="lend_exam_ids" string="审批记录">
+                             <tree string="审批记录" edit="false" create="false">
+                                    <field name="approver_id" string = "审批人" />
+                                    <field name="result" string="审批结果" />
+                                    <field name = "date" string = "审批时间"/>
+                             </tree>
+                         </field>
+                    </group>
+                </form>
+            </field>
+        </record>
          <record model="ir.ui.view" id="asset_lend_tree_view">
             <field name="name">equipment_lend.tree</field>
             <field name="model">asset_management.equipment_lend</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree string ="equipment_it_apply" >
                     <field name="SN" string = "设备SN" model = 'One2many'/>
                     <field name="user_id" string = "申请人"/>
                     <field name="approver_id" string = "审批人"/>
