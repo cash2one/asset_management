@@ -149,7 +149,8 @@
                          <button name="action_to_confirm" type="object" states='demander' string="提交"  class="oe_highlight" />
                         <button name="action_to_demander" type="object" states="ass_admin,ass_owner,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" string="退回"  class="oe_highlight" />
                         <button name="action_to_next" type="object" states="ass_admin,ass_owner,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" string="同意" class="oe_highlight" />
-                        <field name="state" widget="statusbar"/>
+                         <button name="action_to_back" type="object" string="归还" states="done" class="oe_highlight" />
+                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
                     <!--<field name="SN" string = "设备SN" widget = 'many2many_tags' />-->
