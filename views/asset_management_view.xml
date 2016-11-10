@@ -11,9 +11,7 @@
                         <button name="action_to_demander" type="object" string="退回" states="ass_admin,owner,ass_admin_manager" class="oe_highlight" />
                         <button name="action_to_next" type="object" string="同意" states="ass_admin,owner,ass_admin_manager" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
-
                     </header>
-
                     <group>
                         <group>
                             <field name="storage_id" string = "入库单号"/>
@@ -217,9 +215,9 @@
                     </group>
                     <footer>
                         <button name="subscribe" type="object"
-                                string="Subscribe" class="oe_highlight"/>
+                                string="直接提交" class="oe_highlight"/>
                         or
-                        <button special="cancel" string="Cancel"/>
+                        <button special="cancel" string="取消提单"/>
                     </footer>
                 </form>
             </field>
@@ -295,7 +293,7 @@
             <field name="name">equipment_it_apply.tree</field>
             <field name="model">asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree string ="equipment_it_apply" >
                     <field name="apply_id" string = "领用单号"/>
                     <field name="user_id" string = "申请人"/>
                     <field name="tester" string = "测试人员"/>

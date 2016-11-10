@@ -618,7 +618,6 @@ class equipment_it_apply(models.Model):
 
     @api.multi
     def action_to_confirm(self):
-        print 'aaaaaaaaa'
         for sn in self.SN:
             if sn.equipment_use == u"公共备件":
                 continue

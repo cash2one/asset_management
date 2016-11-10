@@ -102,9 +102,6 @@
             <field name="act_window_id" ref="asset_processed_lending_action" />
         </record>
 
-
-
-
         <record id="asset_getting_action" model="ir.actions.act_window" >
             <field name="name">领用申请待处理</field>
             <field name="res_model">asset_management.equipment_get</field>
