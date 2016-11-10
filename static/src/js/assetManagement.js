@@ -40,8 +40,6 @@ openerp.asset_management=function(instance){
                         self.addBtn(title);//添加自定义按钮
                         self.removeBtn(title);//删除按钮
                         self.menuId=targetSpan.parent("a").attr("data-menu");
-                    }else{
-                        $('#asset_management_removeBtn').remove();
                     }
                 }
             },100);
@@ -75,13 +73,21 @@ openerp.asset_management=function(instance){
             });
         },
         removeBtn:function(display_name){
-            if(display_name=="库存中的设备"){
-                $('#asset_management_removeBtn').remove();
-            }else{
-                if($('#asset_management_removeBtn').length==0){
-                    $("head").append("<link id='asset_management_removeBtn' rel='stylesheet' href='/asset_management/static/src/css/removeBtn.css' />");
+            var obj={
+                "库存中的设备":[3,4,6],
+                "借用设备":[5],
+                "领用设备":[5],
+                "实验室设备":[5]
+            };
+            var timer=setInterval(function(){
+                if($("li.oe_sidebar_action").length>3){
+                    clearInterval(timer);
+                    $("li.oe_sidebar_action").css("display","none");
+                    $(obj[display_name]).each(function(i,v){
+                        $('a[data-index='+v+']').parent().css("display","block");
+                    });
                 }
-            }
+            },100);
         },
         start:function(){
         //暂时不需要
