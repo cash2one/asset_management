@@ -12,7 +12,7 @@
                 'security/ir.model.access.csv',
                 'views/asset_management_view.xml',
                 'views/asset_management_lend_view.xml',
-                'views/asset_storage_workflow.xml',
+                # 'views/asset_storage_workflow.xml',
                 # 'views/asset_get_workflow.xml',
                 #'views/asset_lend_workflow.xml',
                # 'views/asset_apply_workflow.xml',

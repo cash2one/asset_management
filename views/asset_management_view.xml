@@ -193,9 +193,9 @@
             <field name="name">equipment_it_apply.form</field>
             <field name="model" >asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_apply Form" create="false">
                      <header>
-                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
+                         <button name="action_to_confirm" type="object" string="提交" states="demander" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
@@ -228,18 +228,18 @@
             <field name="name">equipment_it_apply.form</field>
             <field name="model" >asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_apply Form" create="false">
                      <header>
-                         <button name="action_to_confirm" type="workflow" string="提交" states="damander" class="oe_highlight" />
-                        <button name="action_to_draft" type="workflow" string="同意" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
-                        <button name="action_to_down" type="workflow" string="拒绝" states="ass_admin,dem_leader,ass_director,ass_admin_manager" class="oe_highlight" />
+                         <button name="action_to_confirm" type="object" string="提交" states="demander" class="oe_highlight" />
+                        <button name="action_to_next" type="object" string="同意" states="ass_admin,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" class="oe_highlight" />
+                        <button name="action_to_demander" type="object" string="拒绝" states="ass_admin,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" class="oe_highlight" />
                          <button name="action_to_back" type="object" string="归还" states="done" class="oe_highlight" />
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
                          <group>
                             <field name="apply_id" string = "领用单号"/>
-                            <field name="user_id" string = "申请人"/>
+                            <field name="user_id" string = "申请人" />
                              <field name="use_begin" string = "开始时间"/>
                             <field name="up_date" string = "上架时间"/>
                         </group>
@@ -260,7 +260,7 @@
             <field name="name">equipment_it_apply.form</field>
             <field name="model" >asset_management.equipment_it_apply</field>
             <field name="arch" type="xml">
-                <form string="equipment_storage Form" create="false">
+                <form string="equipment_apply Form" create="false">
                      <header>
                         <field name="state" widget="statusbar"/>
                      </header>
