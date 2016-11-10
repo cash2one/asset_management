@@ -36,7 +36,7 @@ openerp.asset_management=function(instance){
                 if(targetSpan.length){
                     clearInterval(timer);
                     var modelTitle=targetSpan.html().trim();
-                    if(modelTitle=="Asset management"||modelTitle=="资产管理"){
+                    if(modelTitle=="Asset management"||modelTitle=="仓库管理"){
                         self.addBtn(title);//添加自定义按钮
                         self.removeBtn(title);//删除按钮
                         self.menuId=targetSpan.parent("a").attr("data-menu");
@@ -63,7 +63,7 @@ openerp.asset_management=function(instance){
             var $spans = $("div[data-menu-parent="+this.menuId+"] .oe_menu_text");
             $spans.each(function(i,v){
                 var text=$(v).html().trim();
-                if(text=="storing Menu"||text=="入库单"){
+                if(text=="storing Menu"||text=="入库待审批"){
                     $(v).parent("a").trigger("click");
                     var timer=setInterval(function(){
                         if($('.oe_list_buttons>.oe_list_add').length){
