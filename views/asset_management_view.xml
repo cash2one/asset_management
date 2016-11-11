@@ -411,7 +411,7 @@
         </record>
 
         <act_window id="launch_session_get_wizard"
-                    name="get"
+                    name="领用"
                     src_model="asset_management.equipment_info"
                     res_model="asset_management.equipment_get"
                     view_mode="form"
