@@ -103,12 +103,12 @@ msgstr "入库审批"
 #. module: asset_management
 #: model:ir.ui.menu,name:asset_management.pending_storing_menu
 msgid "storing Menu"
-msgstr "待审批"
+msgstr "入库待审批"
 
 #. module: asset_management
 #: model:ir.ui.menu,name:asset_management.processed_storing_menu
 msgid "processed storing Menu"
-msgstr "已审批"
+msgstr "入库已审批"
 
 #. module: asset_management
 #: model:ir.ui.menu,name:asset_management.all_applying_menu
@@ -125,3 +125,17 @@ msgstr "待审批"
 msgid "processed apply Menu"
 msgstr "已审批"
 
+#. module: asset_management
+#: model:ir.ui.menu,name:asset_management.all_back_menu
+msgid "back Menu"
+msgstr "设备归还"
+
+#. module: asset_management
+#: model:ir.ui.menu,name:asset_management.pending_backing_menu
+msgid "backing Menu"
+msgstr "待审批"
+
+#. module: asset_management
+#: model:ir.ui.menu,name:asset_management.processed_back_menu
+msgid "processed backing Menu"
+msgstr "已审批"

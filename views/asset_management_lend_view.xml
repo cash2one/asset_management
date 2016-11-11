@@ -41,7 +41,7 @@
             <field name="name">equipment.form</field>
             <field name="model" >asset_management.equipment_info</field>
             <field name="arch" type="xml">
-                <form string="equipment Form" create="false" edit='false' >
+                <form string="equipment Form" create="false"  >
                      <header>
                      </header>
                     <group>
@@ -75,7 +75,7 @@
             <field name="name">equipment.tree</field>
             <field name="model">asset_management.equipment_info</field>
             <field name="arch" type="xml" >
-                <tree create="false" delete="false" get="false" >
+                <tree create="false" delete="false"  >
                     <field name="sn" string = "序列号"/>
                     <field name="equipment_status" string = "设备状态"/>
                     <field name="owner" string = "归属人"/>
@@ -118,8 +118,6 @@
             <field name="arch" type="xml">
                 <graph string="device graph">
                     <field string="厂商" name="firms" />
-
-
                 </graph>
             </field>
         </record>
@@ -157,7 +155,7 @@
             <field name="name">equipment_lend.form</field>
             <field name="model" >asset_management.equipment_lend</field>
             <field name="arch" type="xml">
-                <form string="equipment_lend Form" create="false">
+                <form string="equipment_lend Form" create="false" delete = "false" >
                      <header>
                          <button name="action_to_confirm" type="object" states='demander' string="提交"  class="oe_highlight" />
                         <button name="action_to_demander" type="object" states="ass_admin,ass_owner,dem_leader,dem_leader_manager,ass_director,ass_admin_manager" string="退回"  class="oe_highlight" />
@@ -195,9 +193,8 @@
             <field name="name">equipment_lend.form</field>
             <field name="model" >asset_management.equipment_lend</field>
             <field name="arch" type="xml">
-                <form string="equipment_lend Form" create="false" deleter ="false" >
+                <form string="equipment_lend Form" create="false" delete ="false" edit = "false">
                      <header>
-
                         <field name="state" widget="statusbar"/>
                      </header>
                     <group>
@@ -227,7 +224,7 @@
             <field name="name">equipment_lend.tree</field>
             <field name="model">asset_management.equipment_lend</field>
             <field name="arch" type="xml">
-                <tree string ="equipment_it_apply" >
+                <tree string ="equipment_lend" create="false" delete = "false" edit = "false">
                     <field name="SN" string = "设备SN" model = 'One2many'/>
                     <field name="user_id" string = "申请人"/>
                     <field name="approver_id" string = "审批人"/>

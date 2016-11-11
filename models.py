@@ -226,7 +226,7 @@ class equipment_lend(models.Model):
     lend_id = fields.Char(string=u"借用单号")
     user_id = fields.Many2one('res.users', string=u"申请人",default=lambda self: self.env.user,required=True)
     #user_id = fields.Many2one('res.users', string=u"申请人",required=True)
-    approver_id = fields.Many2one('res.users',default=lambda self: self.env.user,string=u"审批人")
+    approver_id = fields.Many2one('res.users',default=lambda self: self.env.user,string=u"审批人",required=True)
     SN = fields.Many2many('asset_management.equipment_info',"lend_equipment_ref", string=u"设备SN",default=_default_SN,required=True)
     state = fields.Selection([
             ('demander', u"需求方申请"),
@@ -358,12 +358,10 @@ class equipment_lend(models.Model):
 
             # self.approver_id = self.user_id
 
-        # self.env['asset_management.lend_examine'].create(
-        #     {'approver_id': self.approver_id.id, 'result': u'通过', 'lend_id': self.id})
-        #if self.approver_id:
-        data = [u'借用申请', self.lend_id]
-        device = self.env['asset_management.equipment_info'].search([('state', '=', u'待入库')], limit=1)
-        device.send_email([self.approver_id], data)
+        
+        # data = [u'借用申请', self.lend_id]
+        # device = self.env['asset_management.equipment_info'].search([('state', '=', u'待入库')], limit=1)
+        # device.send_email([self.approver_id], data)
 
     @api.multi
     def action_to_demander(self):
@@ -577,8 +575,8 @@ class equipment_it_apply(models.Model):
         return {'aaaaaaaaaaaaaa'}
 
     apply_id = fields.Char(string=u"申请IT环境单号")
-    user_id = fields.Many2one('res.users', string=u"申请人",default=lambda self: self.env.user, required=True)
-    approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string=u"申请人",default=lambda self: self.env.user,required=True)
+    approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user,required=True)
     SN = fields.Many2many('asset_management.equipment_info',"it_equipment_ref" ,string=u"设备SN",default=_default_SN, required=True)
     state = fields.Selection([
         ('demander', u"需求方申请"),
@@ -642,7 +640,6 @@ class equipment_it_apply(models.Model):
                 print self.owners
                 self.owners -= approver_id
                 self.approver_id = approver_id
-
 
             elif len(self.owners) == 0:
                 self.state = 'ass_admin'
@@ -759,7 +756,6 @@ class back_to_store(models.Model):
     approver_id = fields.Many2one('res.users', string=u"审批人",default=lambda self: self.env.user)
     SN = fields.Many2many('asset_management.equipment_info', "back_equipment_ref", string=u"设备SN",default= _default_SN,
                           required=True,)
-
     state = fields.Selection([
 
         ('demander', u"归还方申请"),
