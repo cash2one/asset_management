@@ -74,10 +74,10 @@ openerp.asset_management=function(instance){
         },
         removeBtn:function(display_name){
             var obj={
-                "库存中的设备":[3,4,6],
-                "借用设备":[5],
-                "领用设备":[5],
-                "实验室设备":[5]
+                "库存中的设备":[4,5,7],
+                "借用设备":[6],
+                "领用设备":[6],
+                "实验室设备":[6]
             };
             var timer=setInterval(function(){
                 if($("li.oe_sidebar_action").length>3){
